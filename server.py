@@ -28,7 +28,7 @@ PORT = int(os.environ.get("PORT", "8080"))
 ASSET_BASE = os.environ.get("ASSET_BASE", "").strip().rstrip("/")
 MAX_PLAYERS = 40
 MAX_PER_IP = int(os.environ.get("MAX_PER_IP", "2"))                 # connections allowed per network
-OWNER_CODE = os.environ.get("OWNER_CODE", "epicfridge:067067")      # type this as the username to become owner
+OWNER_CODE = os.environ.get("OWNER_CODE", "epicfridge:06706")      # type this as the username to become owner
 OWNER_NAME = "epicfridge (OWNER)"
 ALLOWED_EXT = {".json", ".atlas", ".png"}
 
