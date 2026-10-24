@@ -1,9 +1,7 @@
 """
 Cookiewars Multiplayer server
-- Serves index.html
-- Serves ONLY the .json / .atlas / .png files that sit directly inside each
-  character folder in ./Cookiewars (the "texture" sub-folders are never served)
-- Handles the multiplayer WebSocket at /ws
+- Serves index.html and assets
+- Handles multiplayer WebSockets at /ws with WebRTC voice signaling & physical ball sync
 """
 import asyncio
 import gzip
@@ -23,16 +21,13 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 ASSET_DIR = os.path.join(BASE, "Cookiewars")
 VENDOR_DIR = os.path.join(BASE, "vendor")
 PORT = int(os.environ.get("PORT", "8080"))
-# Optional: where the character files are hosted (e.g. https://user.github.io/repo). Empty = serve from this PC.
 ASSET_BASE = os.environ.get("ASSET_BASE", "").strip().rstrip("/")
 MAX_PLAYERS = 40
-MAX_PER_IP = int(os.environ.get("MAX_PER_IP", "2"))                 # connections allowed per network
-# Strip quotes that might accidentally be imported from .env or config files
+MAX_PER_IP = int(os.environ.get("MAX_PER_IP", "2"))
 OWNER_CODE = os.environ.get("OWNER_CODE", "epicfridge:06706").strip().strip('"').strip("'")
 OWNER_NAME = "epicfridge (OWNER)"
 ALLOWED_EXT = {".json", ".atlas", ".png"}
 
-# Spine 3.7 web runtime + three.js are downloaded once into ./vendor
 VENDOR = {
     "three.min.js": [
         "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js",
@@ -55,7 +50,6 @@ def ensure_vendor():
         ok = False
         for url in urls:
             try:
-                print(f"[vendor] downloading {fname} from {url}")
                 req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
                 with urllib.request.urlopen(req, timeout=30) as r:
                     data = r.read()
@@ -63,15 +57,11 @@ def ensure_vendor():
                     with open(path, "wb") as f:
                         f.write(data)
                     ok = True
-                    print(f"[vendor] saved {fname} ({len(data)//1024} KB)")
                     break
-            except Exception as e:  # noqa
-                print(f"[vendor] failed: {e}")
-        if not ok:
-            print(f"[vendor] WARNING: could not download {fname}. The browser will try a CDN instead.")
+            except Exception:
+                pass
 
 
-# ---------------------------------------------------------------- characters
 def scan_characters():
     out = []
     if not os.path.isdir(ASSET_DIR):
@@ -101,7 +91,6 @@ def char_names():
     return {c["name"] for c in scan_characters()}
 
 
-# ---------------------------------------------------------------- http
 async def index(request):
     return web.FileResponse(os.path.join(BASE, "index.html"), headers={"Cache-Control": "no-cache"})
 
@@ -110,7 +99,7 @@ async def api_characters(request):
     return web.json_response({"base": ASSET_BASE, "characters": scan_characters()}, headers={"Cache-Control": "no-cache"})
 
 
-_text_cache = {}   # path -> (mtime, raw, gz)
+_text_cache = {}
 
 
 async def asset(request):
@@ -121,13 +110,11 @@ async def asset(request):
         raise web.HTTPNotFound()
     root = os.path.realpath(ASSET_DIR)
     path = os.path.realpath(os.path.join(ASSET_DIR, folder, fname))
-    # must be exactly <Cookiewars>/<folder>/<file>  (no sub-folders, no traversal)
     if os.path.dirname(os.path.dirname(path)) != root or not os.path.isfile(path):
         raise web.HTTPNotFound()
     cache = "public, max-age=86400"
     if ext == ".png":
         return web.FileResponse(path, headers={"Cache-Control": cache})
-    # json / atlas: kept in memory and sent gzip-compressed
     mtime = os.path.getmtime(path)
     ent = _text_cache.get(path)
     if not ent or ent[0] != mtime:
@@ -157,16 +144,19 @@ async def vendor(request):
     return web.FileResponse(path, headers={"Cache-Control": "public, max-age=86400"})
 
 
-# ---------------------------------------------------------------- websocket
-players = {}  # id -> dict
+# ---------------------------------------------------------------- state & physics
+players = {}
 next_id = 1
 _seq = 0
+
+ball_state = {"x": 0.0, "y": 2.0, "z": 0.0, "vx": 0.0, "vy": 0.0, "vz": 0.0, "last_by": None}
 
 
 def pid_seq():
     global _seq
     _seq += 1
     return _seq
+
 CTRL = re.compile(r"[\x00-\x1f\x7f]")
 
 
@@ -183,7 +173,7 @@ def num(v, lo, hi, default=0.0):
         v = float(v)
     except (TypeError, ValueError):
         return default
-    if v != v:  # NaN
+    if v != v:
         return default
     return max(lo, min(hi, v))
 
@@ -193,9 +183,6 @@ def public(p):
 
 
 def client_ip(request):
-    """Real visitor IP. Behind Cloudflare or Fly.io proxies, retrieve the visitor's
-    address from reverse-proxy HTTP headers."""
-    # Check headers injected by Fly.io or Cloudflare
     ip = (
         request.headers.get("Fly-Client-IP")
         or request.headers.get("CF-Connecting-IP")
@@ -203,12 +190,11 @@ def client_ip(request):
         or request.remote
         or "?"
     )
-
     try:
         a = ipaddress.ip_address(ip)
         if a.version == 6 and a.ipv4_mapped:
             a = a.ipv4_mapped
-        if a.version == 6:   # IPv6 users can rotate inside their /64, group by subnet
+        if a.version == 6:
             return str(ipaddress.ip_network(f"{a}/64", strict=False).network_address)
         return str(a)
     except ValueError:
@@ -216,7 +202,6 @@ def client_ip(request):
 
 
 def admin_snapshot():
-    """First (non-owner) player from an IP is 'normal', later ones from the same IP are alts of that first one."""
     first = {}
     normal, alts = [], []
     for p in sorted(players.values(), key=lambda q: q["seq"]):
@@ -252,8 +237,8 @@ async def broadcast(msg, exclude=None):
 
 
 async def ws_handler(request):
-    global next_id
-    ws = web.WebSocketResponse(heartbeat=15, max_msg_size=4096)
+    global next_id, ball_state
+    ws = web.WebSocketResponse(heartbeat=15, max_msg_size=16384)
     await ws.prepare(request)
     me = None
     ip = client_ip(request)
@@ -262,7 +247,7 @@ async def ws_handler(request):
             try:
                 msg = await ws.receive(timeout=90)
             except asyncio.TimeoutError:
-                break  # nothing at all for 90s -> dead connection
+                break
             if msg.type != WSMsgType.TEXT:
                 if msg.type in (WSMsgType.CLOSE, WSMsgType.CLOSING, WSMsgType.CLOSED, WSMsgType.ERROR):
                     break
@@ -282,24 +267,12 @@ async def ws_handler(request):
             if me is None:
                 if t != "join":
                     continue
-                
-                # Fetch raw name input from WebSocket
                 raw_name = str(data.get("name") or "").strip()
-                
-                # Retrieve loaded OWNER_CODE cleaned of quotes/spaces
                 clean_owner_code = str(OWNER_CODE or "").strip().strip('"').strip("'")
-                
-                # Debug logging to terminal
-                print(f"[DEBUG] Received name: '{raw_name}' (bytes: {raw_name.encode('utf-8')})")
-                print(f"[DEBUG] Target OWNER_CODE: '{clean_owner_code}' (bytes: {clean_owner_code.encode('utf-8')})")
-                
-                # Direct string check or HMAC check
                 is_owner = bool(clean_owner_code) and (
                     hmac.compare_digest(raw_name.encode("utf-8"), clean_owner_code.encode("utf-8")) or 
                     raw_name == clean_owner_code
                 )
-                
-                print(f"[DEBUG] is_owner result: {is_owner}")
 
                 char = data.get("char")
                 if char not in char_names():
@@ -319,9 +292,9 @@ async def ws_handler(request):
                         await ws.send_str(json.dumps({"t": "error", "m": "Server is full."}))
                         break
                     if sum(1 for p in players.values() if p["ip"] == ip) >= MAX_PER_IP:
-                        await ws.send_str(json.dumps({"t": "error", "m": f"Too many players from your network (max {MAX_PER_IP})."}))
-                        print(f"[limit] blocked extra connection from {ip}")
+                        await ws.send_str(json.dumps({"t": "error", "m": f"Too many players from network (max {MAX_PER_IP})."}))
                         break
+
                 pid = str(next_id)
                 next_id += 1
                 me = {
@@ -334,33 +307,59 @@ async def ws_handler(request):
                 await ws.send_str(json.dumps({
                     "t": "welcome", "id": pid, "name": name,
                     "spawn": {"x": me["x"], "y": me["y"], "z": me["z"]}, "owner": is_owner,
-                    "players": others,
+                    "players": others, "ball": ball_state
                 }))
                 await broadcast({"t": "join", "p": public(me)}, exclude=pid)
-                print(f"[+] {name} joined as {char} from {ip} ({len(players)} online)")
                 await push_admin()
                 continue
 
+            # --- Movement ---
             if t == "s":
                 me["x"] = num(data.get("x"), -80, 80, me["x"])
                 me["y"] = num(data.get("y"), -50, 200, me["y"])
                 me["z"] = num(data.get("z"), -80, 80, me["z"])
                 await broadcast({"t": "s", "id": me["id"], "x": me["x"], "y": me["y"], "z": me["z"]}, exclude=me["id"])
+
+            # --- Ball Physics Sync ---
+            elif t == "ball":
+                ball_state = {
+                    "x": num(data.get("x"), -100, 100),
+                    "y": num(data.get("y"), -10, 100),
+                    "z": num(data.get("z"), -100, 100),
+                    "vx": num(data.get("vx"), -50, 50),
+                    "vy": num(data.get("vy"), -50, 50),
+                    "vz": num(data.get("vz"), -50, 50),
+                    "last_by": me["id"]
+                }
+                await broadcast({"t": "ball", **ball_state}, exclude=me["id"])
+
+            # --- WebRTC Voice Signaling ---
+            elif t in ("rtc_offer", "rtc_answer", "rtc_candidate"):
+                target = players.get(str(data.get("to")))
+                if target:
+                    await send(target, {"t": t, "from": me["id"], "data": data.get("data")})
+
+            # --- Owner Controls ---
+            elif t == "mute_all" and me["owner"]:
+                await broadcast({"t": "server_mute", "state": bool(data.get("state"))})
+
             elif t == "emote":
                 n = int(num(data.get("n"), 1, 7, 0))
                 if n:
                     await broadcast({"t": "emote", "id": me["id"], "n": n}, exclude=me["id"])
+
             elif t == "admin_list" and me["owner"]:
                 await send(me, admin_snapshot())
+
             elif t == "kick" and me["owner"]:
                 target = players.get(str(data.get("id", "")))
                 if target and not target["owner"]:
-                    print(f"[kick] {target['name']} was kicked by {me['name']}")
                     await send(target, {"t": "kicked"})
                     try:
                         await target["ws"].close(code=4001, message=b"kicked")
                     except Exception:
                         pass
+
             elif t == "chat":
                 text = clean_text(data.get("m"), 200)
                 if not text:
@@ -368,32 +367,26 @@ async def ws_handler(request):
                 now = time.time()
                 me["chat_times"] = [x for x in me["chat_times"] if now - x < 6]
                 if len(me["chat_times"]) >= 5:
-                    continue  # rate limited
+                    continue
                 me["chat_times"].append(now)
-                print(f"[chat] {me['name']}: {text}")
                 await broadcast({"t": "chat", "id": me["id"], "name": me["name"], "m": text})
-    except Exception as e:  # noqa
+    except Exception as e:
         print("[ws] error:", e)
     finally:
         if me and players.get(me["id"]) is me:
             del players[me["id"]]
             await broadcast({"t": "leave", "id": me["id"], "name": me["name"]})
-            print(f"[-] {me['name']} left ({len(players)} online)")
             await push_admin()
         if not ws.closed:
             await ws.close()
     return ws
 
 
-# ---------------------------------------------------------------- main
 async def on_startup(app):
     loop = asyncio.get_running_loop()
     await loop.run_in_executor(None, ensure_vendor)
     chars = scan_characters()
     print(f"[assets] {len(chars)} character(s) found in {ASSET_DIR}")
-    print(f"[assets] character files are loaded from: {ASSET_BASE or 'this PC (local)'}")
-    if not chars:
-        print("[assets] WARNING: no characters found. Each folder needs a .json, .atlas and .png directly inside it.")
 
 
 def main():
