@@ -1,1 +1,983 @@
-<!doctype html><title>Cookiewars assets</title><p>Cookiewars asset host.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Cookiewars Online</title>
+<style>
+  :root { --blue:#7fd0ff; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; overflow:hidden; background:#a8dcff; font-family:"Trebuchet MS","Segoe UI",Arial,sans-serif; color:#fff; user-select:none; -webkit-user-select:none; }
+  #game { position:fixed; inset:0; width:100%; height:100%; display:block; touch-action:none; }
+  #tags { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+  .tag { position:absolute; left:0; top:0; display:none; text-align:center; will-change:transform; }
+  .tag .name { display:inline-block; font-size:13px; font-weight:bold; padding:1px 7px; border-radius:9px; background:rgba(0,0,0,.35); text-shadow:0 1px 2px #000; white-space:nowrap; }
+  .tag .bubble { display:none; position:relative; max-width:210px; margin:0 auto 9px; padding:6px 10px; border-radius:12px; background:#fff; color:#222; font-size:14px; line-height:1.25; word-wrap:break-word; box-shadow:0 2px 6px rgba(0,0,0,.35); }
+  .tag .bubble::after { content:""; position:absolute; left:50%; bottom:-7px; margin-left:-7px; border:7px solid transparent; border-bottom:0; border-top-color:#fff; }
+
+  /* lobby */
+  #lobby { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(255,200,230,.25); backdrop-filter:blur(4px); z-index:50; padding:10px; overflow:auto; }
+  .card { width:min(380px,100%); background:rgba(60,30,50,.82); border:3px solid #ffb3d9; border-radius:20px; padding:20px; display:flex; flex-direction:column; gap:12px; box-shadow:0 10px 40px rgba(0,0,0,.4); user-select:auto; -webkit-user-select:auto; }
+  .card h1 { margin:0; text-align:center; font-size:26px; text-shadow:0 2px 0 #c2467f; }
+  .card input, .card select { width:100%; font-size:17px; padding:10px 12px; border-radius:10px; border:2px solid #ffb3d9; background:#fff; color:#222; outline:none; font-family:inherit; }
+  .previewBox { height:240px; border-radius:14px; background:radial-gradient(circle at 50% 80%, #ffe6f2, #d9f0ff); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; }
+  #preview { height:100%; aspect-ratio:1/1; }
+  #playBtn { font-size:22px; font-weight:bold; padding:12px; border:0; border-radius:14px; background:linear-gradient(#ff8cc6,#e0509a); color:#fff; cursor:pointer; text-shadow:0 2px 0 rgba(0,0,0,.25); font-family:inherit; }
+  #playBtn:disabled { filter:grayscale(.8) brightness(.8); cursor:default; }
+  #lobbyStatus { min-height:20px; text-align:center; font-size:14px; color:#ffd; }
+
+  /* HUD */
+  #hud { position:fixed; inset:0; display:none; pointer-events:none; z-index:10; }
+  #hud button, #hud input, #hud .click { pointer-events:auto; }
+  #chat { position:absolute; left:10px; top:max(10px,env(safe-area-inset-top)); width:min(420px,60vw); }
+  #chat.hidden { display:none; }
+  #chatlog { max-height:210px; overflow-y:auto; padding:6px 8px; border-radius:8px; background:rgba(0,0,0,.35); font-size:15px; line-height:1.35; text-shadow:0 1px 2px #000; pointer-events:auto; user-select:text; -webkit-user-select:text; scrollbar-width:thin; word-wrap:break-word; }
+  #chatlog:empty { display:none; }
+  #chatlog .sys { font-style:italic; color:#bbb; }
+  #chatlog .pn { color:var(--blue); }
+  #chatinput { display:none; width:100%; margin-top:5px; font-size:16px; padding:7px 10px; border-radius:8px; border:2px solid #fff; background:rgba(0,0,0,.65); color:#fff; outline:none; font-family:inherit; user-select:text; -webkit-user-select:text; }
+  #topright { position:absolute; right:10px; top:max(10px,env(safe-area-inset-top)); display:flex; align-items:center; gap:8px; }
+  #ping { font-size:12px; text-shadow:0 1px 2px #000; opacity:.85; }
+  .roundBtn { width:44px; height:44px; border-radius:50%; border:2px solid #fff; background:rgba(0,0,0,.45); color:#fff; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; font-family:inherit; touch-action:none; }
+  .roundBtn:active { background:rgba(255,140,200,.7); }
+  #options { display:none; position:absolute; right:0; top:52px; width:230px; padding:12px; border-radius:12px; background:rgba(40,20,35,.92); border:2px solid #ffb3d9; font-size:15px; pointer-events:auto; }
+  #options label { display:flex; justify-content:space-between; align-items:center; gap:8px; margin:8px 0; }
+  #options h3 { margin:0 0 4px; font-size:17px; }
+  #options input[type=range] { width:100px; }
+  #emotes { position:absolute; left:10px; bottom:max(10px,env(safe-area-inset-bottom)); font-size:15px; line-height:1.5; text-shadow:0 1px 3px #000, 0 0 4px #000; }
+  #emotes.hidden { display:none; }
+  #emotes div { cursor:pointer; pointer-events:auto; }
+  #emotes div.dim { opacity:.6; }
+  #hint { position:absolute; right:10px; max-width:min(560px,55vw); bottom:max(10px,env(safe-area-inset-bottom)); font-size:15px; text-shadow:0 1px 3px #000, 0 0 4px #000; text-align:right; }
+
+  /* touch UI */
+  #touchui { display:none; }
+  body.touch #touchui { display:block; }
+  body.touch #hint { display:none; }
+  body.touch #emotes { bottom:190px; background:rgba(0,0,0,.55); border-radius:12px; padding:8px 12px; font-size:16px; }
+  body.hideTouch #touchui { display:none !important; }
+  body.touch.hideTouch #hint { display:block; font-size:13px; max-width:min(420px,70vw); }
+  .roundBtn.on { background:rgba(255,140,200,.75); }
+  body.touch #emotes div { padding:4px 0; }
+  #joy { position:absolute; left:max(22px,env(safe-area-inset-left)); bottom:max(24px,env(safe-area-inset-bottom)); width:130px; height:130px; border-radius:50%; background:rgba(255,255,255,.18); border:2px solid rgba(255,255,255,.6); pointer-events:auto; touch-action:none; }
+  #knob { position:absolute; left:50%; top:50%; width:56px; height:56px; margin:-28px 0 0 -28px; border-radius:50%; background:rgba(255,255,255,.65); }
+  #jumpBtn { position:absolute; right:max(22px,env(safe-area-inset-right)); bottom:max(30px,env(safe-area-inset-bottom)); width:84px; height:84px; font-size:16px; font-weight:bold; background:rgba(255,140,200,.55); pointer-events:auto; }
+  #sideBtns { position:absolute; right:max(22px,env(safe-area-inset-right)); bottom:calc(max(30px,env(safe-area-inset-bottom)) + 100px); display:flex; flex-direction:column; gap:10px; }
+  #sideBtns .roundBtn { pointer-events:auto; }
+
+  .tag .name.owner { color:#ffd54a; }
+  #admin { display:none; position:absolute; right:10px; top:64px; width:290px; height:min(70vh,560px); flex-direction:column; background:rgba(30,15,28,.92); border:2px solid #ffd54a; border-radius:12px; pointer-events:auto; font-size:14px; overflow:hidden; z-index:3; }
+  #admin .ah { padding:8px 10px; font-weight:bold; background:rgba(255,213,74,.18); border-bottom:1px solid #ffd54a; }
+  #admin .half { flex:1 1 0; min-height:0; display:flex; flex-direction:column; }
+  #admin .half + .half { border-top:2px solid #ffd54a; }
+  #admin .sh { padding:5px 10px; font-weight:bold; color:#ffd54a; }
+  #admin .list { flex:1; overflow-y:auto; padding:0 6px 6px; }
+  #admin .row { display:flex; align-items:center; justify-content:space-between; gap:6px; padding:3px 4px; border-radius:6px; }
+  #admin .row:hover { background:rgba(255,255,255,.08); }
+  #admin .nm { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #admin .kick { flex:none; border:0; border-radius:6px; background:#d9344f; color:#fff; font-size:12px; font-weight:bold; padding:3px 9px; cursor:pointer; font-family:inherit; }
+  #admin .kick:hover { background:#ff4d6a; }
+  #kickPopup { display:none; position:fixed; inset:0; z-index:120; background:rgba(0,0,0,.6); align-items:center; justify-content:center; }
+  #kickPopup .box { background:rgba(60,30,50,.96); border:3px solid #ffb3d9; border-radius:16px; padding:22px 30px; text-align:center; font-size:22px; display:flex; flex-direction:column; gap:14px; }
+  #kickPopup button { font-size:18px; padding:8px 24px; border-radius:10px; border:0; background:#e0509a; color:#fff; cursor:pointer; font-family:inherit; }
+  #disc { display:none; position:fixed; inset:0; z-index:100; background:rgba(0,0,0,.7); align-items:center; justify-content:center; flex-direction:column; gap:14px; font-size:22px; text-align:center; padding:20px; }
+  #disc button { font-size:20px; padding:10px 22px; border-radius:12px; border:0; background:#e0509a; color:#fff; cursor:pointer; font-family:inherit; }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="tags"></div>
+
+<div id="lobby">
+  <div class="card">
+    <h1>🍪 Cookiewars Online</h1>
+    <input id="username" maxlength="24" placeholder="Username" autocomplete="off" spellcheck="false">
+    <select id="charSelect"><option>Loading characters…</option></select>
+    <div class="previewBox"><canvas id="preview" width="384" height="384"></canvas></div>
+    <button id="playBtn" disabled>Play</button>
+    <div id="lobbyStatus">Loading…</div>
+  </div>
+</div>
+
+<div id="hud">
+  <div id="chat">
+    <div id="chatlog"></div>
+    <input id="chatinput" maxlength="200" placeholder="Type a message (Enter = send, Esc = cancel)" autocomplete="off" spellcheck="false">
+  </div>
+
+  <div id="topright">
+    <span id="ping"></span>
+    <button class="roundBtn" id="gear" title="Options">⚙</button>
+    <div id="options">
+      <h3>Options</h3>
+      <label>Chat bubbles <input type="checkbox" id="optBubbles"></label>
+      <label>Name tags <input type="checkbox" id="optTags"></label>
+      <label>Show chat <input type="checkbox" id="optChat"></label>
+      <label>Mobile controls <input type="checkbox" id="optTouch"></label>
+      <label>Camera speed <input type="range" id="optSens" min="0.3" max="2.5" step="0.1"></label>
+    </div>
+  </div>
+
+  <div id="admin">
+    <div class="ah">TOTAL PLAYERS: <span id="admTotal">--</span></div>
+    <div class="half"><div class="sh" id="admNormalH"></div><div class="list" id="admNormal"></div></div>
+    <div class="half"><div class="sh" id="admAltH"></div><div class="list" id="admAlt"></div></div>
+  </div>
+
+  <div id="emotes"></div>
+  <div id="hint">/ - Chat | V - Camera | B - Lock cursor to game | P - Show emotes list | O - Hide/Show chat | WASD and Arrow Keys - Walk | SPACE - Jump | SHIFT (hold)  - Run</div>
+
+  <div id="touchui">
+    <div id="joy"><div id="knob"></div></div>
+    <div id="sideBtns">
+      <button class="roundBtn" id="btnRun" title="Run">🏃</button>
+      <button class="roundBtn" id="btnEmote">😀</button>
+      <button class="roundBtn" id="btnChat">💬</button>
+      <button class="roundBtn" id="btnCam">🎥</button>
+    </div>
+    <button class="roundBtn" id="jumpBtn">JUMP</button>
+  </div>
+</div>
+
+<div id="kickPopup"><div class="box"><div>You've been kicked.</div><button id="kickOk">OK</button></div></div>
+<div id="disc"><div>Disconnected from the server.</div><button onclick="location.reload()">Reload</button></div>
+
+<script>
+(function () {
+"use strict";
+const $ = id => document.getElementById(id);
+const lobbyStatus = $("lobbyStatus");
+const status = t => { lobbyStatus.textContent = t; };
+
+/* ------------------------------------------------------------ constants */
+const TOUCH = ("ontouchstart" in window) || navigator.maxTouchPoints > 0 || (window.matchMedia && matchMedia("(pointer:coarse)").matches);
+if (TOUCH) document.body.classList.add("touch");
+const CHAR_H = 2.0;        // world height of a cookie
+const TEX = 384;           // per-player sprite texture size
+const MOVE_SPEED = 6, RUN_SPEED = 10, RUN_ANIM = 1.3, JUMP_V = 9, GRAV = 25;
+const RADIUS = 0.35, BODY_H = 1.8, WORLD = 57;
+const EMOTES = [null,
+  { label: "Attack 1",   anim: "attack1", plays: 1 },
+  { label: "Attack 2",   anim: "attack2", plays: 1 },
+  { label: "Hurt",       anim: "damage",  plays: 1 },
+  { label: "Die",        anim: "dead",    plays: 1, hold: 2 },
+  { label: "Dizzy",      anim: "stun",    plays: 2 },
+  { label: "Happy/Win",  anim: "win",     plays: 2 },
+  { label: "Sad/Lose",   anim: "lose",    plays: 2 },
+];
+
+try { if (sessionStorage.getItem("cwmp_kicked")) { sessionStorage.removeItem("cwmp_kicked"); $("kickPopup").style.display = "flex"; } } catch (_) {}
+$("kickOk").onclick = () => { $("kickPopup").style.display = "none"; };
+
+/* ------------------------------------------------------------ options */
+function loadJSON(k) { try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (_) { return {}; } }
+function saveJSON(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} }
+const opts = Object.assign({ bubbles: true, tags: true, sens: 1, touchUI: true }, loadJSON("cwmp_opts"));
+$("optTouch").checked = opts.touchUI; document.body.classList.toggle("hideTouch", !opts.touchUI);
+$("optTouch").onchange = e => { opts.touchUI = e.target.checked; document.body.classList.toggle("hideTouch", !opts.touchUI); saveJSON("cwmp_opts", opts); };
+$("optChat").checked = true;
+$("optChat").onchange = e => setChatVisible(e.target.checked);
+function setChatVisible(v) { $("chat").classList.toggle("hidden", !v); $("optChat").checked = v; if (!v) closeChat(); }
+function toggleChat() { setChatVisible($("chat").classList.contains("hidden")); }
+$("optBubbles").checked = opts.bubbles; $("optTags").checked = opts.tags; $("optSens").value = opts.sens;
+$("optBubbles").onchange = e => { opts.bubbles = e.target.checked; saveJSON("cwmp_opts", opts); };
+$("optTags").onchange = e => { opts.tags = e.target.checked; saveJSON("cwmp_opts", opts); };
+$("optSens").oninput = e => { opts.sens = parseFloat(e.target.value); saveJSON("cwmp_opts", opts); };
+$("gear").onclick = () => { const o = $("options"); o.style.display = o.style.display === "block" ? "none" : "block"; };
+
+/* ------------------------------------------------------------ script loading */
+function loadScript(urls) {
+  return new Promise((res, rej) => {
+    let i = 0;
+    (function next() {
+      if (i >= urls.length) return rej(new Error("Could not load " + urls[0]));
+      const s = document.createElement("script");
+      s.src = urls[i++];
+      s.onload = () => res();
+      s.onerror = () => { s.remove(); next(); };
+      document.head.appendChild(s);
+    })();
+  });
+}
+
+/* ------------------------------------------------------------ globals filled after boot */
+let THREE_, renderer, scene, camera;
+let spineCanvas, spineCtx, spineGL, spineRenderer;
+const colliders = [];
+const players = new Map();
+let me = null, myId = null, inGame = false, ws = null, leaving = false, isOwner = false;
+let camMode = "third", yaw = 0, pitch = 0.35, camDist = 7;
+const charCache = new Map();
+let characters = [], selectedChar = null, previewPuppet = null, assetBase = "";
+
+/* ============================================================ SPINE ============================================================ */
+function initSpine() {
+  spineCanvas = document.createElement("canvas");
+  spineCanvas.width = spineCanvas.height = TEX;
+  spineCtx = new spine.webgl.ManagedWebGLRenderingContext(spineCanvas, { alpha: true, premultipliedAlpha: true, preserveDrawingBuffer: true, antialias: true });
+  spineGL = spineCtx.gl;
+  spineRenderer = new spine.webgl.SceneRenderer(spineCanvas, spineCtx, false);
+}
+let assetManager;
+function amLoad(kind, path) {
+  return new Promise((res, rej) => {
+    assetManager[kind](path, () => res(), (p, m) => rej(new Error(m || ("Failed to load " + p))));
+  });
+}
+function applySkin(sk, sd) {
+  try {
+    if (sd.findSkin("skin01")) sk.setSkinByName("skin01");
+    else console.warn("skin01 not found, using default skin");
+  } catch (e) { console.warn(e); }
+  sk.setToSetupPose();
+}
+function sampleBounds(sd, stateData, name, anims) {
+  const sk = new spine.Skeleton(sd); applySkin(sk, sd);
+  const st = new spine.AnimationState(stateData);
+  const dur = Math.max(anims[name].duration, 0.01), N = 10;
+  const off = new spine.Vector2(), size = new spine.Vector2(), tmp = [];
+  let b = null;
+  st.setAnimation(0, name, true);
+  for (let i = 0; i <= N; i++) {
+    if (i > 0) st.update(dur / N);
+    st.apply(sk); sk.updateWorldTransform();
+    sk.getBounds(off, size, tmp);
+    if (!isFinite(off.x) || !isFinite(size.x) || size.x <= 0 || size.y <= 0) continue;
+    const x0 = off.x, y0 = off.y, x1 = off.x + size.x, y1 = off.y + size.y;
+    if (!b) b = { x0, y0, x1, y1 };
+    else { b.x0 = Math.min(b.x0, x0); b.y0 = Math.min(b.y0, y0); b.x1 = Math.max(b.x1, x1); b.y1 = Math.max(b.y1, y1); }
+  }
+  return b;
+}
+function loadCharacter(info) {
+  if (charCache.has(info.name)) return charCache.get(info.name);
+  const p = (async () => {
+    const tryLoad = async prefix => {
+      const base = prefix + "/Cookiewars/" + encodeURIComponent(info.name) + "/";
+      const jsonPath = base + encodeURIComponent(info.json);
+      const atlasPath = base + encodeURIComponent(info.atlas);
+      await Promise.all([amLoad("loadText", jsonPath), amLoad("loadTextureAtlas", atlasPath)]);
+      return { atlas: assetManager.get(atlasPath), json: assetManager.get(jsonPath) };
+    };
+    let got;
+    try { got = await tryLoad(assetBase); }
+    catch (e) {
+      if (!assetBase) throw e;
+      console.warn("Remote asset host failed for " + info.name + ", using this PC instead.", e);
+      got = await tryLoad("");
+    }
+    const sd = new spine.SkeletonJson(new spine.AtlasAttachmentLoader(got.atlas)).readSkeletonData(got.json);
+    const stateData = new spine.AnimationStateData(sd);
+    stateData.defaultMix = 0.1;
+    const anims = {};
+    sd.animations.forEach(a => anims[a.name] = a);
+    const idleName = anims.idle ? "idle" : (sd.animations[0] && sd.animations[0].name);
+    if (!idleName) throw new Error("No animations in " + info.name);
+    const idleB = sampleBounds(sd, stateData, idleName, anims) || { x0: -50, y0: 0, x1: 50, y1: 200 };
+    let u = Object.assign({}, idleB);
+    for (const n in anims) {
+      const b = sampleBounds(sd, stateData, n, anims);
+      if (!b) continue;
+      u.x0 = Math.min(u.x0, b.x0); u.y0 = Math.min(u.y0, b.y0); u.x1 = Math.max(u.x1, b.x1); u.y1 = Math.max(u.y1, b.y1);
+    }
+    const idleH = Math.max(idleB.y1 - idleB.y0, 1);
+    const ws_ = CHAR_H / idleH;                         // spine units -> world units
+    const side = Math.max(u.x1 - u.x0, u.y1 - u.y0) * 1.08;
+    const cx = (u.x0 + u.x1) / 2, cy = (u.y0 + u.y1) / 2;
+    const idleCx = (idleB.x0 + idleB.x1) / 2;
+    return {
+      name: info.name, sd, stateData, anims,
+      side, cx, cy,
+      planeSize: side * ws_,
+      offX: (cx - idleCx) * ws_,
+      offY: (cy - idleB.y0) * ws_,
+    };
+  })();
+  charCache.set(info.name, p);
+  p.catch(() => charCache.delete(info.name));
+  return p;
+}
+
+/* ------------------------------------------------------------ Puppet: animation logic */
+class Puppet {
+  constructor(ch) {
+    this.ch = ch;
+    this.sk = new spine.Skeleton(ch.sd); applySkin(this.sk, ch.sd);
+    this.state = new spine.AnimationState(ch.stateData);
+    this.running = false; this.moving = false; this.mode = "idle"; this.emote = null; this.emoteCount = 0;
+    this.holding = false; this.holdTimer = 0; this.idleCount = 0; this.idleTarget = 8;
+    const self = this, noop = function () {};
+    this.state.addListener({ start: noop, interrupt: noop, end: noop, dispose: noop, event: noop, complete: e => self.onComplete(e) });
+    this.playIdle();
+  }
+  has(n) { return !!this.ch.anims[n]; }
+  playIdle() {
+    this.mode = "idle"; this.idleCount = 0;
+    this.idleTarget = 6 + Math.floor(Math.random() * 5);   // 6..10 loops, then idle2
+    this.state.setAnimation(0, "idle", true);
+  }
+  playMove() {
+    this.mode = "move";
+    this.state.setAnimation(0, this.has("move") ? "move" : "idle", true);
+  }
+  setMoving(m) {
+    if (m === this.moving) return;
+    this.moving = m;
+    if (m) { this.emote = null; this.holding = false; this.playMove(); }
+    else if (this.mode === "move") this.playIdle();
+  }
+  playEmote(n) {
+    const e = EMOTES[n];
+    if (!e || !this.has(e.anim)) return false;
+    this.mode = "emote"; this.emote = e; this.emoteCount = 0; this.holding = false;
+    this.state.setAnimation(0, e.anim, e.plays > 1);
+    return true;
+  }
+  endEmote() {
+    this.emote = null; this.holding = false;
+    if (this.moving) this.playMove(); else this.playIdle();
+  }
+  onComplete(entry) {
+    const name = entry.animation.name;
+    if (this.mode === "emote" && this.emote && name === this.emote.anim) {
+      if (this.emote.plays > 1) { if (++this.emoteCount >= this.emote.plays) this.endEmote(); }
+      else if (this.emote.hold) { if (!this.holding) { this.holding = true; this.holdTimer = this.emote.hold; } }
+      else this.endEmote();
+      return;
+    }
+    if (this.mode === "idle") {
+      if (name === "idle") {
+        if (++this.idleCount >= this.idleTarget && this.has("idle2")) this.state.setAnimation(0, "idle2", false);
+      } else if (name === "idle2") this.playIdle();
+    }
+  }
+  update(dt) {
+    this.state.timeScale = (this.mode === "move" && this.running) ? RUN_ANIM : 1;
+    this.state.update(dt);
+    if (this.holding) { this.holdTimer -= dt; if (this.holdTimer <= 0) this.endEmote(); }
+  }
+  // draw into a 2D canvas context (TEX x TEX)
+  renderTo(ctx2d) {
+    const sk = this.sk, ch = this.ch, gl = spineGL;
+    this.state.apply(sk); sk.updateWorldTransform();
+    gl.viewport(0, 0, TEX, TEX);
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+    const cam = spineRenderer.camera;
+    cam.position.x = ch.cx; cam.position.y = ch.cy;
+    cam.setViewport(ch.side, ch.side); cam.update();
+    spineRenderer.begin();
+    spineRenderer.drawSkeleton(sk, true);      // atlas is premultiplied
+    spineRenderer.end();
+    ctx2d.clearRect(0, 0, TEX, TEX);
+    ctx2d.drawImage(spineCanvas, 0, 0);
+  }
+}
+
+/* ============================================================ THREE WORLD ============================================================ */
+function buildWorld() {
+  const T = THREE;
+  renderer = new T.WebGLRenderer({ canvas: $("game"), antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  scene = new T.Scene();
+  scene.background = new T.Color(0xa8dcff);
+  scene.fog = new T.Fog(0xa8dcff, 55, 140);
+  camera = new T.PerspectiveCamera(65, 1, 0.1, 400);
+  scene.add(new T.HemisphereLight(0xffffff, 0xc9b08a, 0.9));
+  const sun = new T.DirectionalLight(0xffffff, 0.55); sun.position.set(30, 50, 20); scene.add(sun);
+
+  // ground
+  const c = document.createElement("canvas"); c.width = c.height = 64;
+  const g = c.getContext("2d");
+  g.fillStyle = "#8fe08a"; g.fillRect(0, 0, 64, 64);
+  g.fillStyle = "#7fd47a"; g.fillRect(0, 0, 32, 32); g.fillRect(32, 32, 32, 32);
+  const gt = new T.CanvasTexture(c); gt.wrapS = gt.wrapT = T.RepeatWrapping; gt.repeat.set(60, 60);
+  const ground = new T.Mesh(new T.PlaneGeometry(240, 240), new T.MeshLambertMaterial({ map: gt }));
+  ground.rotation.x = -Math.PI / 2; scene.add(ground);
+
+  const palette = [0xff9ec7, 0x9ef0d0, 0xffe58a, 0xc7a6ff, 0xffc29a, 0x8fd3ff];
+  let ci = 0;
+  function addBox(cx, cz, w, d, top, thick, color) {
+    thick = Math.min(thick, top);
+    color = color !== undefined ? color : palette[ci++ % palette.length];
+    const geo = new T.BoxGeometry(w, thick, d);
+    const m = new T.Mesh(geo, new T.MeshLambertMaterial({ color }));
+    m.position.set(cx, top - thick / 2, cz);
+    m.add(new T.LineSegments(new T.EdgesGeometry(geo), new T.LineBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.22 })));
+    scene.add(m);
+    const cap = new T.Mesh(new T.BoxGeometry(w + 0.12, 0.14, d + 0.12), new T.MeshLambertMaterial({ color: 0xfff1e0 }));
+    cap.position.set(cx, top - 0.05, cz); scene.add(cap);
+    colliders.push({ minX: cx - w / 2, maxX: cx + w / 2, minZ: cz - d / 2, maxZ: cz + d / 2, minY: top - thick, maxY: top });
+  }
+  // staircase up to the sugar tower
+  addBox(-6, 2, 4, 4, 1.1, 99);
+  addBox(-10, -3, 4, 4, 2.2, 99);
+  addBox(-10, -9, 4, 4, 3.3, 99);
+  addBox(-4, -12, 4, 4, 4.4, 99);
+  addBox(2, -12, 4, 4, 5.5, 99);
+  addBox(9, -12, 8, 8, 6.6, 99, 0xffd1e8);       // tower top
+  // bridge and descending stairs
+  addBox(9, -3, 2.4, 10, 6.6, 0.6, 0xc7a6ff);
+  addBox(9, 6, 4, 4, 5.5, 99);
+  addBox(9, 11, 4, 4, 4.4, 99);
+  addBox(9, 16, 4, 4, 3.3, 99);
+  addBox(9, 21, 4, 4, 2.2, 99);
+  // cake on the tower
+  [[2.2, 1.0, 0xff9ec7], [1.5, 1.0, 0xfff1e0], [0.9, 0.8, 0xff7ab0]].reduce((y, [r, h, col]) => {
+    const m = new T.Mesh(new T.CylinderGeometry(r, r, h, 24), new T.MeshLambertMaterial({ color: col }));
+    m.position.set(9, 6.6 + y + h / 2, -12); scene.add(m); return y + h;
+  }, 0);
+  colliders.push({ minX: 6.8, maxX: 11.2, minZ: -14.2, maxZ: -9.8, minY: 6.6, maxY: 7.6 });
+  // pyramid
+  addBox(-22, 14, 12, 12, 1.2, 99, 0xffe58a);
+  addBox(-22, 14, 8, 8, 2.4, 99, 0xffc29a);
+  addBox(-22, 14, 4, 4, 3.6, 99, 0xff9ec7);
+  // west parkour pillars
+  addBox(-24, -6, 2, 2, 1.4, 99, 0x9ef0d0);
+  addBox(-24, -10, 2, 2, 2.6, 99, 0x8fd3ff);
+  addBox(-24, -14, 2, 2, 3.8, 99, 0xc7a6ff);
+  addBox(-24, -18, 2, 2, 2.6, 99, 0xff9ec7);
+  addBox(-24, -22, 6, 6, 3.8, 99, 0xffe58a);
+  // east stairs + floating islands
+  addBox(16, 8, 4, 4, 1.1, 99);
+  addBox(21, 8, 4, 4, 2.2, 99);
+  addBox(26, 8, 4, 4, 3.3, 99);
+  addBox(26, 2, 4, 4, 3.3, 0.8, 0x9ef0d0);
+  addBox(26, -4, 3, 3, 3.3, 0.8, 0xffe58a);
+  addBox(31, -4, 3, 3, 4.4, 0.8, 0xff9ec7);
+  addBox(36, -4, 5, 5, 5.5, 0.8, 0xc7a6ff);
+  // low wall + landmark spire
+  addBox(0, 26, 20, 2, 1.4, 99, 0x8fd3ff);
+  addBox(-38, -38, 3, 3, 12, 99, 0xff9ec7);
+  addBox(38, 38, 3, 3, 9, 99, 0x9ef0d0);
+
+  // lollipops (decor)
+  let seed = 1337; const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const stickMat = new T.MeshLambertMaterial({ color: 0xffffff });
+  for (let i = 0, placed = 0; i < 400 && placed < 34; i++) {
+    const x = (rnd() * 2 - 1) * 54, z = (rnd() * 2 - 1) * 54;
+    if (Math.hypot(x, z) < 15) continue;
+    if (colliders.some(b => x > b.minX - 2.5 && x < b.maxX + 2.5 && z > b.minZ - 2.5 && z < b.maxZ + 2.5)) continue;
+    const col = palette[Math.floor(rnd() * palette.length)];
+    const stick = new T.Mesh(new T.CylinderGeometry(0.1, 0.1, 2.6, 8), stickMat); stick.position.set(x, 1.3, z); scene.add(stick);
+    const disc = new T.Mesh(new T.CylinderGeometry(0.95, 0.95, 0.2, 24), new T.MeshLambertMaterial({ color: col }));
+    disc.rotation.x = Math.PI / 2; disc.rotation.z = rnd() * 3; disc.position.set(x, 3.2, z); scene.add(disc);
+    const dot = new T.Mesh(new T.CylinderGeometry(0.5, 0.5, 0.24, 18), new T.MeshLambertMaterial({ color: 0xffffff }));
+    dot.rotation.x = Math.PI / 2; dot.rotation.z = disc.rotation.z; dot.position.copy(disc.position); scene.add(dot);
+    colliders.push({ minX: x - 0.15, maxX: x + 0.15, minZ: z - 0.15, maxZ: z + 0.15, minY: 0, maxY: 2.6 });
+    placed++;
+  }
+  // clouds
+  const cloudMat = new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9, fog: false });
+  for (let i = 0; i < 14; i++) {
+    const m = new T.Mesh(new T.SphereGeometry(1, 12, 8), cloudMat);
+    m.scale.set(6 + rnd() * 6, 1.6 + rnd(), 3 + rnd() * 3);
+    m.position.set((rnd() * 2 - 1) * 100, 28 + rnd() * 14, (rnd() * 2 - 1) * 100);
+    scene.add(m);
+  }
+  window.addEventListener("resize", onResize); onResize();
+}
+function onResize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h; camera.updateProjectionMatrix();
+}
+function groundHeightAt(x, y, z) {
+  let h = 0;
+  for (const b of colliders) {
+    if (x > b.minX - 0.2 && x < b.maxX + 0.2 && z > b.minZ - 0.2 && z < b.maxZ + 0.2 && b.maxY <= y + 0.3 && b.maxY > h) h = b.maxY;
+  }
+  return h;
+}
+
+/* ============================================================ PLAYERS ============================================================ */
+function makeTag(pl) {
+  const el = document.createElement("div"); el.className = "tag";
+  const b = document.createElement("div"); b.className = "bubble";
+  const n = document.createElement("div"); n.className = "name"; n.textContent = pl.name;
+  el.appendChild(b); el.appendChild(n); $("tags").appendChild(el);
+  pl.tagEl = el; pl.bubbleEl = b; pl.nameEl = n;
+}
+function createPlayer(info, isMe) {
+  const T = THREE;
+  const pl = {
+    id: info.id, name: info.name, char: info.char, isMe,
+    pos: new T.Vector3(info.x, info.y, info.z), target: new T.Vector3(info.x, info.y, info.z),
+    flip: 1, lastDir: null, speed: 0, moving: false, running: false, puppet: null, group: null,
+    bubbleUntil: 0, vy: 0, grounded: false, coyote: 0, lastSend: 0, sentPos: new T.Vector3(1e9, 0, 0),
+  };
+  const sh = new T.Mesh(new T.CircleGeometry(0.5, 20), new T.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.3, depthWrite: false }));
+  sh.rotation.x = -Math.PI / 2; scene.add(sh); pl.shadow = sh;
+  makeTag(pl);
+  if (info.owner) pl.nameEl.classList.add("owner");
+  players.set(pl.id, pl);
+  const entry = characters.find(c => c.name === info.char);
+  if (entry) loadCharacter(entry).then(ch => {
+    if (players.get(pl.id) !== pl) return;
+    buildVisual(pl, ch);
+  }).catch(err => console.error("Character load failed", info.char, err));
+  return pl;
+}
+function buildVisual(pl, ch) {
+  const T = THREE;
+  pl.cv = document.createElement("canvas"); pl.cv.width = pl.cv.height = TEX; pl.ctx = pl.cv.getContext("2d");
+  pl.tex = new T.CanvasTexture(pl.cv); pl.tex.minFilter = T.LinearFilter; pl.tex.magFilter = T.LinearFilter; pl.tex.generateMipmaps = false;
+  const mat = new T.MeshBasicMaterial({ map: pl.tex, transparent: true, alphaTest: 0.05, side: T.DoubleSide, fog: false });
+  const mesh = new T.Mesh(new T.PlaneGeometry(ch.planeSize, ch.planeSize), mat);
+  mesh.position.set(ch.offX, ch.offY, 0);
+  pl.group = new T.Group(); pl.group.add(mesh); scene.add(pl.group);
+  pl.mesh = mesh; pl.puppet = new Puppet(ch); pl.charData = ch;
+  if (pl.isMe) refreshEmoteList();
+}
+function removePlayer(id) {
+  const pl = players.get(id); if (!pl) return;
+  players.delete(id);
+  if (pl.group) { scene.remove(pl.group); pl.mesh.geometry.dispose(); pl.mesh.material.dispose(); pl.tex.dispose(); }
+  scene.remove(pl.shadow); pl.shadow.geometry.dispose(); pl.shadow.material.dispose();
+  pl.tagEl.remove();
+}
+
+/* ------------------------------------------------------------ local physics */
+const K = { up: false, down: false, left: false, right: false, jump: false, run: false };
+let runTouch = false;
+const joy = { x: 0, y: 0 };
+let typing = false, jumpTouch = false;
+const E = 0.001;
+function resolveAxis(p, axis, v) {
+  for (const b of colliders) {
+    if (p.y + BODY_H > b.minY + E && p.y < b.maxY - E && p.x + RADIUS > b.minX && p.x - RADIUS < b.maxX && p.z + RADIUS > b.minZ && p.z - RADIUS < b.maxZ) {
+      if (b.maxY - p.y <= 0.3) { p.y = b.maxY; if (me.vy < 0) me.vy = 0; continue; }   // tiny ledge: step up
+      if (axis === "x") p.x = v > 0 ? b.minX - RADIUS : (v < 0 ? b.maxX + RADIUS : (p.x < (b.minX + b.maxX) / 2 ? b.minX - RADIUS : b.maxX + RADIUS));
+      else p.z = v > 0 ? b.minZ - RADIUS : (v < 0 ? b.maxZ + RADIUS : (p.z < (b.minZ + b.maxZ) / 2 ? b.minZ - RADIUS : b.maxZ + RADIUS));
+    }
+  }
+}
+function resolveY(p) {
+  me.grounded = false;
+  for (const b of colliders) {
+    if (p.x + RADIUS > b.minX && p.x - RADIUS < b.maxX && p.z + RADIUS > b.minZ && p.z - RADIUS < b.maxZ && p.y < b.maxY && p.y + BODY_H > b.minY) {
+      if (me.vy <= 0) { p.y = b.maxY; me.vy = 0; me.grounded = true; }
+      else { p.y = b.minY - BODY_H; me.vy = 0; }
+    }
+  }
+  if (p.y <= 0) { p.y = 0; if (me.vy < 0) me.vy = 0; me.grounded = true; }
+}
+function updateLocal(dt) {
+  const p = me.pos;
+  let f = (K.up ? 1 : 0) - (K.down ? 1 : 0) + joy.y;
+  let r = (K.right ? 1 : 0) - (K.left ? 1 : 0) + joy.x;
+  if (typing) { f = 0; r = 0; }
+  const len = Math.hypot(f, r);
+  if (len > 1) { f /= len; r /= len; }
+  const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw);
+  const moving = len > 0.08;
+  const run = moving && (K.run || runTouch) && !typing;
+  const spd = run ? RUN_SPEED : MOVE_SPEED;
+  const vx = (fx * f + rx * r) * spd, vz = (fz * f + rz * r) * spd;
+  me.running = run;
+  if (moving) { const l = Math.hypot(vx, vz); me.lastDir = { x: vx / l, z: vz / l }; }
+  me.moving = moving;
+  const wantJump = (K.jump || jumpTouch) && !typing;
+  const n = Math.max(1, Math.ceil(dt / (1 / 60))), h = dt / n;
+  for (let i = 0; i < n; i++) {
+    if (me.grounded) me.coyote = 0.12; else me.coyote -= h;
+    if (wantJump && me.coyote > 0) { me.vy = JUMP_V; me.coyote = 0; me.grounded = false; }
+    p.x += vx * h; resolveAxis(p, "x", vx);
+    p.z += vz * h; resolveAxis(p, "z", vz);
+    p.x = Math.max(-WORLD, Math.min(WORLD, p.x)); p.z = Math.max(-WORLD, Math.min(WORLD, p.z));
+    me.vy = Math.max(me.vy - GRAV * h, -40);
+    p.y += me.vy * h; resolveY(p);
+  }
+  if (p.y < -30) { p.set(0, 1, 8); me.vy = 0; }
+  me.target.copy(p);
+  // network
+  const now = performance.now();
+  if (now - me.lastSend > 66 && p.distanceToSquared(me.sentPos) > 1e-5) {
+    me.lastSend = now; me.sentPos.copy(p);
+    send({ t: "s", x: +p.x.toFixed(3), y: +p.y.toFixed(3), z: +p.z.toFixed(3) });
+  }
+}
+function updateRemote(pl, dt) {
+  const old = pl.pos.clone();
+  if (pl.pos.distanceToSquared(pl.target) > 100) pl.pos.copy(pl.target);
+  else pl.pos.lerp(pl.target, 1 - Math.exp(-14 * dt));
+  const dx = pl.pos.x - old.x, dz = pl.pos.z - old.z;
+  const spd = Math.hypot(dx, dz) / Math.max(dt, 1e-4);
+  pl.speed += (spd - pl.speed) * (1 - Math.exp(-10 * dt));
+  if (!pl.moving && pl.speed > 0.8) pl.moving = true;
+  else if (pl.moving && pl.speed < 0.4) pl.moving = false;
+  if (!pl.running && pl.speed > 8.3) pl.running = true;
+  else if (pl.running && (pl.speed < 7.2 || !pl.moving)) pl.running = false;
+  const l = Math.hypot(dx, dz);
+  if (spd > 0.5 && l > 1e-6) pl.lastDir = { x: dx / l, z: dz / l };
+}
+
+/* ------------------------------------------------------------ camera */
+function clampPitch() {
+  const lo = camMode === "third" ? -0.3 : -1.35, hi = camMode === "third" ? 1.35 : 1.35;
+  pitch = Math.max(lo, Math.min(hi, pitch));
+}
+function toggleCamera() { camMode = camMode === "third" ? "first" : "third"; clampPitch(); }
+function updateCamera() {
+  const p = me.pos;
+  if (camMode === "third") {
+    const tx = p.x, ty = p.y + 1.1, tz = p.z, cp = Math.cos(pitch);
+    camera.position.set(tx + Math.sin(yaw) * cp * camDist, Math.max(0.3, ty + Math.sin(pitch) * camDist), tz + Math.cos(yaw) * cp * camDist);
+    camera.lookAt(tx, ty, tz);
+  } else {
+    const hy = p.y + CHAR_H * 0.85, cp = Math.cos(pitch);
+    camera.position.set(p.x, hy, p.z);
+    camera.lookAt(p.x - Math.sin(yaw) * cp, hy - Math.sin(pitch), p.z - Math.cos(yaw) * cp);
+  }
+}
+
+/* ------------------------------------------------------------ per-frame visuals */
+let frustum, projScreen, sphere;
+function updateVisuals(dt, time) {
+  const T = THREE;
+  if (!frustum) { frustum = new T.Frustum(); projScreen = new T.Matrix4(); sphere = new T.Sphere(new T.Vector3(), 2); }
+  camera.updateMatrixWorld();
+  projScreen.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+  frustum.setFromProjectionMatrix(projScreen);
+  const cp = camera.position;
+  for (const pl of players.values()) {
+    if (pl.puppet) { pl.puppet.running = pl.running; pl.puppet.setMoving(pl.moving); pl.puppet.update(dt); }
+    const gy = groundHeightAt(pl.pos.x, pl.pos.y, pl.pos.z);
+    pl.shadow.position.set(pl.pos.x, gy + 0.03, pl.pos.z);
+    const hgt = Math.max(0, pl.pos.y - gy);
+    pl.shadow.material.opacity = 0.32 * (1 - Math.min(hgt / 7, 0.75));
+    const hide = pl.isMe && camMode === "first";
+    if (!pl.group) continue;
+    pl.group.position.copy(pl.pos);
+    const ry = Math.atan2(cp.x - pl.pos.x, cp.z - pl.pos.z);     // billboard: horizontal axis only
+    pl.group.rotation.y = ry;
+    if (pl.lastDir) {
+      const d = pl.lastDir.x * Math.cos(ry) + pl.lastDir.z * -Math.sin(ry);   // movement along sprite's screen-right
+      if (d > 0.12) pl.flip = 1; else if (d < -0.12) pl.flip = -1;
+    }
+    pl.group.scale.x = pl.flip;
+    sphere.center.set(pl.pos.x, pl.pos.y + 1, pl.pos.z); sphere.radius = Math.max(2, pl.charData.planeSize * 0.75);
+    const dist = cp.distanceTo(pl.pos);
+    const vis = !hide && dist < 90 && frustum.intersectsSphere(sphere);
+    pl.group.visible = vis;
+    if (vis) { pl.puppet.renderTo(pl.ctx); pl.tex.needsUpdate = true; }
+  }
+}
+function updateOverlays(time) {
+  const T = THREE, W = window.innerWidth, H = window.innerHeight;
+  const v = new T.Vector3();
+  for (const pl of players.values()) {
+    const hidden = pl.isMe && camMode === "first";
+    v.set(pl.pos.x, pl.pos.y + CHAR_H + 0.25, pl.pos.z);
+    const d = camera.position.distanceTo(v);
+    v.project(camera);
+    const showBubble = opts.bubbles && time < pl.bubbleUntil;
+    const showName = opts.tags;
+    if (hidden || v.z > 1 || d > 70 || d < 0.8 || (!showBubble && !showName)) { pl.tagEl.style.display = "none"; continue; }
+    pl.tagEl.style.display = "block";
+    pl.tagEl.style.opacity = d > 45 ? Math.max(0, 1 - (d - 45) / 25) : 1;
+    pl.tagEl.style.transform = "translate(" + ((v.x * 0.5 + 0.5) * W).toFixed(1) + "px," + ((-v.y * 0.5 + 0.5) * H).toFixed(1) + "px) translate(-50%,-100%)";
+    pl.bubbleEl.style.display = showBubble ? "block" : "none";
+    pl.nameEl.style.display = showName ? "inline-block" : "none";
+  }
+}
+
+/* ============================================================ CHAT ============================================================ */
+const chatEl = $("chat"), chatLog = $("chatlog"), chatInput = $("chatinput");
+function logLine(node) {
+  chatLog.appendChild(node);
+  while (chatLog.children.length > 120) chatLog.removeChild(chatLog.firstChild);
+  chatLog.scrollTop = chatLog.scrollHeight;
+}
+function addSys(text) { const d = document.createElement("div"); d.className = "sys"; d.textContent = text; logLine(d); }
+function addChat(name, text) {
+  const d = document.createElement("div");
+  const s = document.createElement("span"); s.className = "pn"; s.textContent = "[" + name + "]";
+  d.appendChild(s); d.appendChild(document.createTextNode(": " + text)); logLine(d);
+}
+function openChat() {
+  chatEl.classList.remove("hidden"); $("optChat").checked = true;
+  chatInput.style.display = "block"; typing = true;
+  K.up = K.down = K.left = K.right = K.jump = K.run = false;
+  if (document.pointerLockElement) document.exitPointerLock();
+  chatInput.value = ""; chatInput.focus();
+}
+function closeChat() { chatInput.style.display = "none"; chatInput.blur(); typing = false; }
+chatInput.addEventListener("keydown", e => {
+  e.stopPropagation();
+  if (e.key === "Enter") {
+    const m = chatInput.value.trim();
+    if (m) send({ t: "chat", m: m.slice(0, 200) });
+    closeChat();
+  } else if (e.key === "Escape") closeChat();
+});
+chatInput.addEventListener("blur", () => { setTimeout(() => { if (document.activeElement !== chatInput) closeChat(); }, 50); });
+$("btnChat").onclick = () => openChat();
+
+/* ============================================================ EMOTES ============================================================ */
+function refreshEmoteList() {
+  const box = $("emotes"); box.innerHTML = "";
+  for (let n = 1; n < EMOTES.length; n++) {
+    const has = !me || !me.puppet || me.puppet.has(EMOTES[n].anim);
+    const d = document.createElement("div");
+    d.textContent = n + " - " + EMOTES[n].label + (has ? "" : " (this cookie doesn't have that move!)");
+    if (!has) d.className = "dim";
+    d.onclick = () => { doEmote(n); if (TOUCH) box.classList.add("hidden"); };
+    box.appendChild(d);
+  }
+}
+function doEmote(n) {
+  if (!me || !me.puppet) return;
+  if (me.puppet.playEmote(n)) send({ t: "emote", n });
+}
+function toggleEmotes() { $("emotes").classList.toggle("hidden"); }
+if (TOUCH) $("emotes").classList.add("hidden");
+$("btnEmote").onclick = toggleEmotes;
+$("btnRun").onclick = () => { runTouch = !runTouch; $("btnRun").classList.toggle("on", runTouch); };
+$("btnCam").onclick = toggleCamera;
+
+/* ============================================================ INPUT ============================================================ */
+const KEYMAP = { KeyW: "up", ArrowUp: "up", KeyS: "down", ArrowDown: "down", KeyA: "left", ArrowLeft: "left", KeyD: "right", ArrowRight: "right", Space: "jump", ShiftLeft: "run", ShiftRight: "run" };
+window.addEventListener("keydown", e => {
+  if (!inGame || typing) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = KEYMAP[e.code];
+  if (k) { K[k] = true; e.preventDefault(); return; }
+  if (e.repeat) return;
+  if (e.key === "/" || e.code === "Slash") { e.preventDefault(); openChat(); }
+  else if (e.code === "KeyP") toggleEmotes();
+  else if (e.code === "KeyB") toggleLock();
+  else if (e.code === "KeyO") toggleChat();
+  else if (e.code === "KeyI" && isOwner) toggleAdmin();
+  else if (e.code === "KeyV") toggleCamera();
+  else {
+    const m = /^(?:Digit|Numpad)([1-7])$/.exec(e.code);
+    if (m) doEmote(parseInt(m[1], 10));
+  }
+});
+window.addEventListener("keyup", e => {
+  const k = KEYMAP[e.code]; if (k) { K[k] = false; if (inGame && !typing) e.preventDefault(); }
+});
+window.addEventListener("blur", () => { K.up = K.down = K.left = K.right = K.jump = K.run = false; joy.x = joy.y = 0; jumpTouch = false; });
+
+// camera drag / pinch / wheel
+const ptrs = new Map(); let pinchD = 0;
+const gameCanvas = $("game");
+const pdist = () => { const a = [...ptrs.values()]; return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); };
+gameCanvas.addEventListener("pointerdown", e => {
+  if (!inGame) return;
+  try { gameCanvas.setPointerCapture(e.pointerId); } catch (_) {}
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (ptrs.size === 2) pinchD = pdist();
+  if (typing) closeChat();
+  $("options").style.display = "none";
+});
+gameCanvas.addEventListener("pointermove", e => {
+  const p = ptrs.get(e.pointerId); if (!p) return;
+  const dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
+  if (ptrs.size === 1) { yaw -= dx * 0.006 * opts.sens; pitch += dy * 0.006 * opts.sens; clampPitch(); }
+  else if (ptrs.size === 2) { const d = pdist(); if (pinchD > 0 && camMode === "third") camDist = Math.max(2.2, Math.min(20, camDist * pinchD / d)); pinchD = d; }
+});
+const endPtr = e => { ptrs.delete(e.pointerId); pinchD = 0; };
+gameCanvas.addEventListener("pointerup", endPtr); gameCanvas.addEventListener("pointercancel", endPtr);
+gameCanvas.addEventListener("wheel", e => { if (!inGame) return; e.preventDefault(); if (camMode === "third") camDist = Math.max(2.2, Math.min(20, camDist * Math.exp(e.deltaY * 0.0012))); }, { passive: false });
+gameCanvas.addEventListener("contextmenu", e => e.preventDefault());
+
+// owner menu (I)
+function toggleAdmin() {
+  const a = $("admin");
+  const open = a.style.display !== "flex";
+  a.style.display = open ? "flex" : "none";
+  if (open) { if (document.pointerLockElement) document.exitPointerLock(); send({ t: "admin_list" }); }
+}
+function fillAdmin(box, arr, alt) {
+  box.textContent = "";
+  for (const p of arr) {
+    const row = document.createElement("div"); row.className = "row";
+    const nm = document.createElement("span"); nm.className = "nm";
+    nm.textContent = p.name + (alt ? " (alt of " + p.of + ")" : ""); nm.title = nm.textContent;
+    row.appendChild(nm);
+    if (p.id !== myId) {
+      const b = document.createElement("button"); b.className = "kick"; b.textContent = "Kick";
+      b.onclick = () => send({ t: "kick", id: p.id });
+      row.appendChild(b);
+    }
+    box.appendChild(row);
+  }
+}
+function renderAdmin(m) {
+  const pad = n => String(n).padStart(2, "0");
+  $("admTotal").textContent = pad(m.total) + "/" + m.max;
+  $("admNormalH").textContent = "Normal players (" + pad(m.normal.length) + "):";
+  $("admAltH").textContent = "ALTs (" + pad(m.alts.length) + "):";
+  fillAdmin($("admNormal"), m.normal, false);
+  fillAdmin($("admAlt"), m.alts, true);
+}
+
+// cursor lock (B)
+function toggleLock() {
+  if (document.pointerLockElement) document.exitPointerLock();
+  else if (gameCanvas.requestPointerLock) { try { const r = gameCanvas.requestPointerLock(); if (r && r.catch) r.catch(() => {}); } catch (_) {} }
+}
+document.addEventListener("mousemove", e => {
+  if (document.pointerLockElement !== gameCanvas || !inGame) return;
+  yaw -= e.movementX * 0.0035 * opts.sens; pitch += e.movementY * 0.0035 * opts.sens; clampPitch();
+});
+
+// joystick + jump button
+(function () {
+  const base = $("joy"), knob = $("knob"); let id = null;
+  const R = 50;
+  function move(e) {
+    const r = base.getBoundingClientRect();
+    let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    const l = Math.hypot(dx, dy); if (l > R) { dx = dx / l * R; dy = dy / l * R; }
+    knob.style.transform = "translate(" + dx + "px," + dy + "px)";
+    joy.x = dx / R; joy.y = -dy / R;
+  }
+  base.addEventListener("pointerdown", e => { id = e.pointerId; base.setPointerCapture(id); move(e); e.preventDefault(); });
+  base.addEventListener("pointermove", e => { if (e.pointerId === id) move(e); });
+  const up = e => { if (e.pointerId !== id) return; id = null; joy.x = joy.y = 0; knob.style.transform = ""; };
+  base.addEventListener("pointerup", up); base.addEventListener("pointercancel", up);
+  const jb = $("jumpBtn");
+  jb.addEventListener("pointerdown", e => { jumpTouch = true; jb.setPointerCapture(e.pointerId); e.preventDefault(); });
+  const ju = () => { jumpTouch = false; };
+  jb.addEventListener("pointerup", ju); jb.addEventListener("pointercancel", ju);
+})();
+
+/* ============================================================ NETWORK ============================================================ */
+function send(o) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); }
+let pingTimer = null;
+function handleMsg(m) {
+  switch (m.t) {
+    case "welcome": {
+      myId = m.id;
+      const name = m.name;
+      me = createPlayer({ id: m.id, name, char: selectedChar.name, x: m.spawn.x, y: m.spawn.y, z: m.spawn.z, owner: !!m.owner }, true);
+      isOwner = !!m.owner;
+      for (const p of m.players) createPlayer(p, false);
+      inGame = true; me.welcomed = true;
+      $("lobby").style.display = "none"; $("hud").style.display = "block";
+      refreshEmoteList();
+      addSys(name + " joined the game.");
+      pingTimer = setInterval(() => send({ t: "ping", c: Date.now() }), 4000);
+      send({ t: "ping", c: Date.now() });
+      break;
+    }
+    case "join": if (m.p && !players.has(m.p.id)) { createPlayer(m.p, false); addSys(m.p.name + " joined the game."); } break;
+    case "leave": removePlayer(m.id); addSys((m.name || "Someone") + " left the game."); break;
+    case "s": { const pl = players.get(m.id); if (pl) pl.target.set(m.x, m.y, m.z); break; }
+    case "emote": { const pl = players.get(m.id); if (pl && pl.puppet) pl.puppet.playEmote(m.n); break; }
+    case "chat": {
+      addChat(m.name, m.m);
+      const pl = players.get(m.id);
+      if (pl) { pl.bubbleEl.textContent = m.m; pl.bubbleUntil = performance.now() + Math.min(9000, 3500 + m.m.length * 70); }
+      break;
+    }
+    case "admin": renderAdmin(m); break;
+    case "kicked":
+      leaving = true;
+      try { sessionStorage.setItem("cwmp_kicked", "1"); } catch (_) {}
+      location.reload();
+      break;
+    case "pong": $("ping").textContent = (Date.now() - m.c) + " ms"; break;
+    case "error": status(m.m || "Server error"); break;
+  }
+}
+function startGame() {
+  if (!selectedChar) return;
+  const name = ($("username").value || "").trim().slice(0, 16);
+  try { if (name.indexOf(":") < 0) localStorage.setItem("cwmp_name", name); localStorage.setItem("cwmp_char", selectedChar.name); } catch (_) {}
+  $("playBtn").disabled = true; status("Connecting…");
+  const proto = location.protocol === "https:" ? "wss" : "ws";
+  ws = new WebSocket(proto + "://" + location.host + "/ws");
+  let welcomed = false;
+  ws.onopen = () => ws.send(JSON.stringify({ t: "join", name, char: selectedChar.name }));
+  ws.onmessage = ev => {
+    let m; try { m = JSON.parse(ev.data); } catch (_) { return; }
+    if (m.t === "welcome") welcomed = true;
+    handleMsg(m);
+  };
+  ws.onclose = () => {
+    clearInterval(pingTimer);
+    if (!welcomed) { if (!lobbyStatus.textContent.length || lobbyStatus.textContent === "Connecting…") status("Could not connect to the server."); $("playBtn").disabled = false; }
+    else if (!leaving) $("disc").style.display = "flex";
+  };
+  ws.onerror = () => {};
+}
+function leave() { leaving = true; try { if (ws) ws.close(1000); } catch (_) {} }
+window.addEventListener("pagehide", leave);
+window.addEventListener("beforeunload", leave);
+
+/* ============================================================ MAIN LOOP ============================================================ */
+let last = performance.now();
+let previewCtx = null;
+function frame(now) {
+  requestAnimationFrame(frame);
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  if (!inGame) {
+    const t = now * 0.00007;
+    camera.position.set(Math.cos(t) * 34, 14, Math.sin(t) * 34); camera.lookAt(0, 3, 0);
+    if (previewPuppet) {
+      previewPuppet.update(dt);
+      if (!previewCtx) previewCtx = $("preview").getContext("2d");
+      previewPuppet.renderTo(previewCtx);
+    }
+    renderer.render(scene, camera);
+    return;
+  }
+  updateLocal(dt);
+  for (const pl of players.values()) if (!pl.isMe) updateRemote(pl, dt);
+  me.pos.copy(me.target);
+  updateCamera();
+  updateVisuals(dt, now);
+  renderer.render(scene, camera);
+  updateOverlays(now);
+}
+
+/* ============================================================ BOOT ============================================================ */
+async function selectCharacter(name) {
+  const entry = characters.find(c => c.name === name); if (!entry) return;
+  selectedChar = entry; $("playBtn").disabled = true; status("Loading " + name + "…");
+  try {
+    const ch = await loadCharacter(entry);
+    if (selectedChar !== entry) return;
+    previewPuppet = new Puppet(ch);
+    status(""); $("playBtn").disabled = false;
+  } catch (e) {
+    console.error(e); status("Failed to load " + name + ": " + e.message);
+  }
+}
+async function boot() {
+  try {
+    status("Loading engine…");
+    await loadScript(["https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js", "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js", "/vendor/three.min.js"]);
+    await loadScript(["https://cdn.jsdelivr.net/gh/EsotericSoftware/spine-runtimes@3.7/spine-ts/build/spine-webgl.js", "/vendor/spine-webgl.js"]);
+    THREE_ = window.THREE; initSpine();
+    assetManager = new spine.webgl.AssetManager(spineCtx);
+    buildWorld();
+    requestAnimationFrame(frame);
+    status("Loading characters…");
+    const r = await fetch("/api/characters", { cache: "no-store" });
+    const data = await r.json();
+    characters = Array.isArray(data) ? data : data.characters;
+    assetBase = (data && data.base) || "";
+    if (!characters.length) { status("No characters found in the Cookiewars folder."); $("charSelect").innerHTML = "<option>(none)</option>"; return; }
+    const sel = $("charSelect"); sel.innerHTML = "";
+    for (const c of characters) { const o = document.createElement("option"); o.value = c.name; o.textContent = c.name; sel.appendChild(o); }
+    let savedChar = null, savedName = "";
+    try { savedChar = localStorage.getItem("cwmp_char"); savedName = localStorage.getItem("cwmp_name") || ""; } catch (_) {}
+    $("username").value = savedName;
+    if (savedChar && characters.some(c => c.name === savedChar)) sel.value = savedChar;
+    sel.onchange = () => selectCharacter(sel.value);
+    $("playBtn").onclick = startGame;
+    $("username").addEventListener("keydown", e => { if (e.key === "Enter" && !$("playBtn").disabled) startGame(); });
+    selectCharacter(sel.value);
+  } catch (e) {
+    console.error(e); status("Error: " + e.message);
+  }
+}
+boot();
+})();
+</script>
+</body>
+</html>
