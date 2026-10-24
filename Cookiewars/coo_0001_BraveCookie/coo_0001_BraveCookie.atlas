@@ -1,0 +1,272 @@
+
+coo_0001_BraveCookie.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+skin01/Layer 77
+  rotate: false
+  xy: 2, 389
+  size: 112, 121
+  orig: 112, 121
+  offset: 0, 0
+  index: -1
+skin01/arm_L01
+  rotate: true
+  xy: 93, 342
+  size: 45, 23
+  orig: 45, 23
+  offset: 0, 0
+  index: -1
+skin01/arm_R01
+  rotate: true
+  xy: 93, 295
+  size: 45, 23
+  orig: 45, 23
+  offset: 0, 0
+  index: -1
+skin01/arm_i02
+  rotate: true
+  xy: 281, 457
+  size: 25, 76
+  orig: 25, 76
+  offset: 0, 0
+  index: -1
+skin01/arm_s03
+  rotate: true
+  xy: 421, 474
+  size: 36, 51
+  orig: 36, 51
+  offset: 0, 0
+  index: -1
+skin01/body
+  rotate: false
+  xy: 2, 23
+  size: 48, 53
+  orig: 48, 53
+  offset: 0, 0
+  index: -1
+skin01/body_i02
+  rotate: false
+  xy: 2, 271
+  size: 89, 116
+  orig: 89, 116
+  offset: 0, 0
+  index: -1
+skin01/botton01
+  rotate: true
+  xy: 406, 465
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: -1
+skin01/dead01-1
+  rotate: true
+  xy: 2, 148
+  size: 121, 64
+  orig: 121, 64
+  offset: 0, 0
+  index: -1
+skin01/dead01-2
+  rotate: false
+  xy: 116, 409
+  size: 90, 101
+  orig: 90, 101
+  offset: 0, 0
+  index: -1
+skin01/eye01
+  rotate: true
+  xy: 393, 413
+  size: 41, 21
+  orig: 41, 21
+  offset: 0, 0
+  index: -1
+skin01/eye01-1
+  rotate: false
+  xy: 2, 6
+  size: 41, 15
+  orig: 41, 15
+  offset: 0, 0
+  index: -1
+skin01/eye_ m01
+  rotate: false
+  xy: 359, 456
+  size: 45, 21
+  orig: 45, 21
+  offset: 0, 0
+  index: -1
+skin01/eye_i01
+  rotate: true
+  xy: 474, 465
+  size: 45, 36
+  orig: 45, 36
+  offset: 0, 0
+  index: -1
+skin01/eye_i02
+  rotate: false
+  xy: 160, 384
+  size: 39, 23
+  orig: 39, 23
+  offset: 0, 0
+  index: -1
+skin01/eye_lose1
+  rotate: true
+  xy: 328, 414
+  size: 41, 29
+  orig: 41, 29
+  offset: 0, 0
+  index: -1
+skin01/eye_s01
+  rotate: false
+  xy: 201, 383
+  size: 35, 24
+  orig: 35, 24
+  offset: 0, 0
+  index: -1
+skin01/eye_w01
+  rotate: false
+  xy: 208, 409
+  size: 54, 35
+  orig: 54, 35
+  offset: 0, 0
+  index: -1
+skin01/eye_w02
+  rotate: false
+  xy: 364, 479
+  size: 55, 31
+  orig: 55, 31
+  offset: 0, 0
+  index: -1
+skin01/hair01
+  rotate: true
+  xy: 68, 165
+  size: 51, 22
+  orig: 51, 22
+  offset: 0, 0
+  index: -1
+skin01/hair_i03
+  rotate: false
+  xy: 118, 348
+  size: 35, 30
+  orig: 35, 30
+  offset: 0, 0
+  index: -1
+skin01/hair_s01
+  rotate: false
+  xy: 118, 380
+  size: 40, 27
+  orig: 40, 27
+  offset: 0, 0
+  index: -1
+skin01/hair_w01
+  rotate: true
+  xy: 68, 218
+  size: 51, 25
+  orig: 51, 25
+  offset: 0, 0
+  index: -1
+skin01/head
+  rotate: false
+  xy: 208, 446
+  size: 71, 64
+  orig: 71, 64
+  offset: 0, 0
+  index: -1
+skin01/leg_L01
+  rotate: false
+  xy: 52, 32
+  size: 23, 44
+  orig: 23, 44
+  offset: 0, 0
+  index: -1
+skin01/leg_L02
+  rotate: false
+  xy: 359, 416
+  size: 32, 38
+  orig: 32, 38
+  offset: 0, 0
+  index: -1
+skin01/leg_R01
+  rotate: true
+  xy: 281, 432
+  size: 23, 45
+  orig: 23, 45
+  offset: 0, 0
+  index: -1
+skin01/leg_R03
+  rotate: false
+  xy: 118, 314
+  size: 33, 32
+  orig: 33, 32
+  offset: 0, 0
+  index: -1
+skin01/leg_s02
+  rotate: true
+  xy: 2, 78
+  size: 68, 57
+  orig: 68, 57
+  offset: 0, 0
+  index: -1
+skin01/mouth01
+  rotate: true
+  xy: 264, 412
+  size: 32, 11
+  orig: 32, 11
+  offset: 0, 0
+  index: -1
+skin01/mouth_ m01
+  rotate: false
+  xy: 118, 295
+  size: 28, 17
+  orig: 28, 17
+  offset: 0, 0
+  index: -1
+skin01/mouth_i01
+  rotate: false
+  xy: 93, 271
+  size: 26, 22
+  orig: 26, 22
+  offset: 0, 0
+  index: -1
+skin01/mouth_i02
+  rotate: false
+  xy: 121, 282
+  size: 23, 11
+  orig: 23, 11
+  offset: 0, 0
+  index: -1
+skin01/mouth_s01
+  rotate: false
+  xy: 68, 153
+  size: 18, 10
+  orig: 18, 10
+  offset: 0, 0
+  index: -1
+skin01/mouth_s02
+  rotate: false
+  xy: 95, 230
+  size: 10, 16
+  orig: 10, 16
+  offset: 0, 0
+  index: -1
+skin01/mouth_w01
+  rotate: false
+  xy: 238, 384
+  size: 22, 23
+  orig: 22, 23
+  offset: 0, 0
+  index: -1
+skin01/sweat01
+  rotate: false
+  xy: 95, 248
+  size: 17, 21
+  orig: 17, 21
+  offset: 0, 0
+  index: -1
+skin01/waepon
+  rotate: true
+  xy: 281, 484
+  size: 26, 81
+  orig: 26, 81
+  offset: 0, 0
+  index: -1

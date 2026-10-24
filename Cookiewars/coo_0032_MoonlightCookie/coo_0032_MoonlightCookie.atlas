@@ -1,0 +1,391 @@
+
+coo_0032_MoonlightCookie.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+skin01/arm_01
+  rotate: false
+  xy: 551, 715
+  size: 41, 24
+  orig: 41, 24
+  offset: 0, 0
+  index: -1
+skin01/arm_02
+  rotate: false
+  xy: 107, 2
+  size: 38, 31
+  orig: 38, 31
+  offset: 0, 0
+  index: -1
+skin01/arm_03
+  rotate: false
+  xy: 107, 35
+  size: 40, 46
+  orig: 40, 46
+  offset: 0, 0
+  index: -1
+skin01/arm_04
+  rotate: false
+  xy: 965, 916
+  size: 28, 24
+  orig: 28, 24
+  offset: 0, 0
+  index: -1
+skin01/arm_05
+  rotate: false
+  xy: 147, 2
+  size: 38, 31
+  orig: 38, 31
+  offset: 0, 0
+  index: -1
+skin01/arm_06
+  rotate: false
+  xy: 379, 225
+  size: 26, 26
+  orig: 26, 26
+  offset: 0, 0
+  index: -1
+skin01/arm_07
+  rotate: false
+  xy: 418, 835
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: -1
+skin01/body_01
+  rotate: false
+  xy: 149, 51
+  size: 20, 30
+  orig: 20, 30
+  offset: 0, 0
+  index: -1
+skin01/body_02
+  rotate: false
+  xy: 995, 915
+  size: 27, 25
+  orig: 27, 25
+  offset: 0, 0
+  index: -1
+skin01/body_03
+  rotate: false
+  xy: 379, 200
+  size: 21, 23
+  orig: 21, 23
+  offset: 0, 0
+  index: -1
+skin01/damage
+  rotate: true
+  xy: 2, 406
+  size: 191, 173
+  orig: 191, 173
+  offset: 0, 0
+  index: -1
+skin01/dead_01
+  rotate: true
+  xy: 2, 599
+  size: 225, 184
+  orig: 225, 184
+  offset: 0, 0
+  index: -1
+skin01/dead_02
+  rotate: false
+  xy: 2, 826
+  size: 215, 196
+  orig: 215, 196
+  offset: 0, 0
+  index: -1
+skin01/dead_06
+  rotate: true
+  xy: 314, 317
+  size: 86, 69
+  orig: 86, 69
+  offset: 0, 0
+  index: -1
+skin01/dead_07-2
+  rotate: false
+  xy: 307, 121
+  size: 64, 61
+  orig: 64, 61
+  offset: 0, 0
+  index: -1
+skin01/deco_01
+  rotate: false
+  xy: 177, 399
+  size: 129, 62
+  orig: 129, 62
+  offset: 0, 0
+  index: -1
+skin01/deco_02
+  rotate: true
+  xy: 375, 697
+  size: 127, 62
+  orig: 127, 62
+  offset: 0, 0
+  index: -1
+skin01/deco_03
+  rotate: false
+  xy: 439, 792
+  size: 126, 61
+  orig: 126, 61
+  offset: 0, 0
+  index: -1
+skin01/deco_04
+  rotate: true
+  xy: 170, 137
+  size: 133, 59
+  orig: 133, 59
+  offset: 0, 0
+  index: -1
+skin01/deco_05
+  rotate: false
+  xy: 439, 618
+  size: 81, 95
+  orig: 81, 95
+  offset: 0, 0
+  index: -1
+skin01/deco_s01
+  rotate: true
+  xy: 363, 504
+  size: 100, 70
+  orig: 100, 70
+  offset: 0, 0
+  index: -1
+skin01/deco_s01 copy
+  rotate: true
+  xy: 522, 620
+  size: 93, 63
+  orig: 93, 63
+  offset: 0, 0
+  index: -1
+skin01/effect1
+  rotate: true
+  xy: 439, 715
+  size: 75, 110
+  orig: 75, 110
+  offset: 0, 0
+  index: -1
+skin01/effect2
+  rotate: true
+  xy: 842, 908
+  size: 28, 39
+  orig: 28, 39
+  offset: 0, 0
+  index: -1
+skin01/effect_01
+  rotate: true
+  xy: 883, 910
+  size: 26, 37
+  orig: 26, 37
+  offset: 0, 0
+  index: -1
+skin01/eye_01
+  rotate: true
+  xy: 574, 864
+  size: 51, 26
+  orig: 51, 26
+  offset: 0, 0
+  index: -1
+skin01/eye_02
+  rotate: true
+  xy: 551, 741
+  size: 49, 11
+  orig: 49, 11
+  offset: 0, 0
+  index: -1
+skin01/eye_03
+  rotate: false
+  xy: 793, 908
+  size: 47, 28
+  orig: 47, 28
+  offset: 0, 0
+  index: -1
+skin01/eye_04
+  rotate: false
+  xy: 922, 914
+  size: 41, 26
+  orig: 41, 26
+  offset: 0, 0
+  index: -1
+skin01/hair_01
+  rotate: true
+  xy: 308, 405
+  size: 79, 68
+  orig: 79, 68
+  offset: 0, 0
+  index: -1
+skin01/hair_01-2
+  rotate: false
+  xy: 314, 253
+  size: 76, 62
+  orig: 76, 62
+  offset: 0, 0
+  index: -1
+skin01/hair_02-1
+  rotate: false
+  xy: 418, 917
+  size: 184, 105
+  orig: 184, 105
+  offset: 0, 0
+  index: -1
+skin01/hair_02-2
+  rotate: true
+  xy: 2, 96
+  size: 174, 111
+  orig: 174, 111
+  offset: 0, 0
+  index: -1
+skin01/hair_02-3
+  rotate: false
+  xy: 188, 590
+  size: 158, 117
+  orig: 158, 117
+  offset: 0, 0
+  index: -1
+skin01/hair_02-4
+  rotate: false
+  xy: 188, 709
+  size: 185, 115
+  orig: 185, 115
+  offset: 0, 0
+  index: -1
+skin01/hair_02-5
+  rotate: false
+  xy: 2, 272
+  size: 155, 132
+  orig: 155, 132
+  offset: 0, 0
+  index: -1
+skin01/hair_02-6
+  rotate: false
+  xy: 604, 922
+  size: 187, 100
+  orig: 187, 100
+  offset: 0, 0
+  index: -1
+skin01/hat_01
+  rotate: false
+  xy: 917, 942
+  size: 101, 80
+  orig: 101, 80
+  offset: 0, 0
+  index: -1
+skin01/hat_02
+  rotate: true
+  xy: 304, 486
+  size: 102, 57
+  orig: 102, 57
+  offset: 0, 0
+  index: -1
+skin01/head
+  rotate: false
+  xy: 307, 184
+  size: 70, 67
+  orig: 70, 67
+  offset: 0, 0
+  index: -1
+skin01/moon
+  rotate: true
+  xy: 219, 826
+  size: 196, 197
+  orig: 196, 197
+  offset: 0, 0
+  index: -1
+skin01/moon2
+  rotate: false
+  xy: 177, 463
+  size: 125, 125
+  orig: 125, 125
+  offset: 0, 0
+  index: -1
+skin01/moon3
+  rotate: false
+  xy: 348, 606
+  size: 89, 89
+  orig: 89, 89
+  offset: 0, 0
+  index: -1
+skin01/mouth_01
+  rotate: true
+  xy: 107, 83
+  size: 11, 6
+  orig: 11, 6
+  offset: 0, 0
+  index: -1
+skin01/mouth_02
+  rotate: false
+  xy: 348, 698
+  size: 12, 9
+  orig: 12, 9
+  offset: 0, 0
+  index: -1
+skin01/mouth_03
+  rotate: false
+  xy: 348, 590
+  size: 13, 14
+  orig: 13, 14
+  offset: 0, 0
+  index: -1
+skin01/mouth_04
+  rotate: false
+  xy: 159, 399
+  size: 8, 5
+  orig: 8, 5
+  offset: 0, 0
+  index: -1
+skin01/skirt_01
+  rotate: false
+  xy: 793, 938
+  size: 122, 84
+  orig: 122, 84
+  offset: 0, 0
+  index: -1
+skin01/skirt_02
+  rotate: true
+  xy: 159, 272
+  size: 125, 74
+  orig: 125, 74
+  offset: 0, 0
+  index: -1
+skin01/skirt_03
+  rotate: true
+  xy: 235, 271
+  size: 126, 77
+  orig: 126, 77
+  offset: 0, 0
+  index: -1
+skin01/skirt_04
+  rotate: true
+  xy: 231, 138
+  size: 131, 74
+  orig: 131, 74
+  offset: 0, 0
+  index: -1
+skin01/skirt_05
+  rotate: false
+  xy: 2, 6
+  size: 103, 88
+  orig: 103, 88
+  offset: 0, 0
+  index: -1
+skin01/skirt_06
+  rotate: true
+  xy: 115, 131
+  size: 139, 53
+  orig: 139, 53
+  offset: 0, 0
+  index: -1
+skin01/star_01
+  rotate: true
+  xy: 115, 83
+  size: 46, 48
+  orig: 46, 48
+  offset: 0, 0
+  index: -1
+skin01/weapon
+  rotate: true
+  xy: 418, 855
+  size: 60, 154
+  orig: 60, 154
+  offset: 0, 0
+  index: -1

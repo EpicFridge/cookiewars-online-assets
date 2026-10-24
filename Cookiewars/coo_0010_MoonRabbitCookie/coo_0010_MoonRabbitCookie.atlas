@@ -1,0 +1,300 @@
+
+coo_0010_MoonRabbitCookie.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+skin01/acc_i01
+  rotate: true
+  xy: 96, 112
+  size: 33, 21
+  orig: 33, 21
+  offset: 0, 0
+  index: -1
+skin01/arm_i01
+  rotate: false
+  xy: 429, 337
+  size: 40, 39
+  orig: 40, 39
+  offset: 0, 0
+  index: -1
+skin01/arm_i02
+  rotate: false
+  xy: 451, 405
+  size: 41, 40
+  orig: 41, 40
+  offset: 0, 0
+  index: -1
+skin01/arm_i03
+  rotate: true
+  xy: 119, 115
+  size: 30, 29
+  orig: 30, 29
+  offset: 0, 0
+  index: -1
+skin01/arm_i04
+  rotate: false
+  xy: 83, 36
+  size: 42, 74
+  orig: 42, 74
+  offset: 0, 0
+  index: -1
+skin01/arm_i05
+  rotate: true
+  xy: 2, 2
+  size: 27, 34
+  orig: 27, 34
+  offset: 0, 0
+  index: -1
+skin01/arm_l01
+  rotate: false
+  xy: 442, 447
+  size: 50, 19
+  orig: 50, 19
+  offset: 0, 0
+  index: -1
+skin01/arm_l02
+  rotate: true
+  xy: 124, 2
+  size: 32, 28
+  orig: 32, 28
+  offset: 0, 0
+  index: -1
+skin01/arm_s04
+  rotate: false
+  xy: 96, 147
+  size: 40, 75
+  orig: 40, 75
+  offset: 0, 0
+  index: -1
+skin01/basket01
+  rotate: false
+  xy: 371, 378
+  size: 78, 49
+  orig: 78, 49
+  offset: 0, 0
+  index: -1
+skin01/basket02
+  rotate: false
+  xy: 2, 31
+  size: 79, 79
+  orig: 79, 79
+  offset: 0, 0
+  index: -1
+skin01/basket_s01
+  rotate: false
+  xy: 117, 369
+  size: 93, 56
+  orig: 93, 56
+  offset: 0, 0
+  index: -1
+skin01/body_i01
+  rotate: false
+  xy: 371, 342
+  size: 56, 34
+  orig: 56, 34
+  offset: 0, 0
+  index: -1
+skin01/body_l01
+  rotate: false
+  xy: 2, 112
+  size: 92, 110
+  orig: 92, 110
+  offset: 0, 0
+  index: -1
+skin01/body_m02
+  rotate: false
+  xy: 442, 468
+  size: 59, 42
+  orig: 59, 42
+  offset: 0, 0
+  index: -1
+skin01/damage
+  rotate: false
+  xy: 2, 224
+  size: 112, 142
+  orig: 112, 142
+  offset: 0, 0
+  index: -1
+skin01/dduck01
+  rotate: true
+  xy: 490, 332
+  size: 23, 17
+  orig: 23, 17
+  offset: 0, 0
+  index: -1
+skin01/dead
+  rotate: false
+  xy: 117, 427
+  size: 145, 83
+  orig: 145, 83
+  offset: 0, 0
+  index: -1
+skin01/ear_i01
+  rotate: false
+  xy: 127, 42
+  size: 29, 34
+  orig: 29, 34
+  offset: 0, 0
+  index: -1
+skin01/ear_i02
+  rotate: false
+  xy: 127, 78
+  size: 28, 35
+  orig: 28, 35
+  offset: 0, 0
+  index: -1
+skin01/eye_i01
+  rotate: true
+  xy: 471, 335
+  size: 41, 17
+  orig: 41, 17
+  offset: 0, 0
+  index: -1
+skin01/eye_i02
+  rotate: true
+  xy: 494, 426
+  size: 39, 11
+  orig: 39, 11
+  offset: 0, 0
+  index: -1
+skin01/eye_l01
+  rotate: true
+  xy: 503, 467
+  size: 43, 7
+  orig: 43, 7
+  offset: 0, 0
+  index: -1
+skin01/eye_m04
+  rotate: true
+  xy: 490, 357
+  size: 46, 10
+  orig: 46, 10
+  offset: 0, 0
+  index: -1
+skin01/face_01
+  rotate: false
+  xy: 310, 358
+  size: 17, 13
+  orig: 17, 13
+  offset: 0, 0
+  index: -1
+skin01/face_l01
+  rotate: true
+  xy: 494, 406
+  size: 18, 11
+  orig: 18, 11
+  offset: 0, 0
+  index: -1
+skin01/hair_i01
+  rotate: false
+  xy: 354, 464
+  size: 86, 46
+  orig: 86, 46
+  offset: 0, 0
+  index: -1
+skin01/head_i01
+  rotate: false
+  xy: 212, 371
+  size: 77, 54
+  orig: 77, 54
+  offset: 0, 0
+  index: -1
+skin01/head_i01b
+  rotate: false
+  xy: 354, 429
+  size: 81, 33
+  orig: 81, 33
+  offset: 0, 0
+  index: -1
+skin01/head_i03
+  rotate: false
+  xy: 264, 427
+  size: 88, 83
+  orig: 88, 83
+  offset: 0, 0
+  index: -1
+skin01/head_m01
+  rotate: false
+  xy: 291, 373
+  size: 78, 52
+  orig: 78, 52
+  offset: 0, 0
+  index: -1
+skin01/leg_i01
+  rotate: false
+  xy: 38, 2
+  size: 23, 27
+  orig: 23, 27
+  offset: 0, 0
+  index: -1
+skin01/leg_i02
+  rotate: true
+  xy: 212, 346
+  size: 23, 28
+  orig: 23, 28
+  offset: 0, 0
+  index: -1
+skin01/leg_m01
+  rotate: false
+  xy: 242, 344
+  size: 26, 25
+  orig: 26, 25
+  offset: 0, 0
+  index: -1
+skin01/leg_m02
+  rotate: false
+  xy: 83, 2
+  size: 39, 32
+  orig: 39, 32
+  offset: 0, 0
+  index: -1
+skin01/leg_m03
+  rotate: false
+  xy: 451, 378
+  size: 37, 25
+  orig: 37, 25
+  offset: 0, 0
+  index: -1
+skin01/mouth_i01
+  rotate: true
+  xy: 502, 363
+  size: 17, 8
+  orig: 17, 8
+  offset: 0, 0
+  index: -1
+skin01/mouth_l01
+  rotate: true
+  xy: 502, 382
+  size: 22, 8
+  orig: 22, 8
+  offset: 0, 0
+  index: -1
+skin01/mouth_m03
+  rotate: false
+  xy: 63, 4
+  size: 18, 25
+  orig: 18, 25
+  offset: 0, 0
+  index: -1
+skin01/mouth_s02
+  rotate: false
+  xy: 291, 354
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+skin01/tale
+  rotate: false
+  xy: 270, 351
+  size: 19, 18
+  orig: 19, 18
+  offset: 0, 0
+  index: -1
+skin01/win01
+  rotate: false
+  xy: 2, 368
+  size: 113, 142
+  orig: 113, 142
+  offset: 0, 0
+  index: -1

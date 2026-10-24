@@ -1,0 +1,223 @@
+
+coo_0012_FairyCookie.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+skin01/acc01
+  rotate: false
+  xy: 302, 366
+  size: 27, 24
+  orig: 27, 24
+  offset: 0, 0
+  index: -1
+skin01/arm01
+  rotate: false
+  xy: 307, 105
+  size: 32, 20
+  orig: 32, 20
+  offset: 0, 0
+  index: -1
+skin01/arm_s01
+  rotate: false
+  xy: 307, 194
+  size: 49, 31
+  orig: 49, 31
+  offset: 0, 0
+  index: -1
+skin01/arm_s01 copy
+  rotate: true
+  xy: 191, 12
+  size: 50, 29
+  orig: 50, 29
+  offset: 0, 0
+  index: -1
+skin01/body01
+  rotate: false
+  xy: 442, 401
+  size: 47, 35
+  orig: 47, 35
+  offset: 0, 0
+  index: -1
+skin01/body_d01
+  rotate: false
+  xy: 302, 392
+  size: 138, 108
+  orig: 138, 108
+  offset: 0, 0
+  index: -1
+skin01/body_l02
+  rotate: false
+  xy: 127, 64
+  size: 94, 146
+  orig: 94, 146
+  offset: 0, 0
+  index: -1
+skin01/body_s01
+  rotate: false
+  xy: 122, 7
+  size: 67, 55
+  orig: 67, 55
+  offset: 0, 0
+  index: -1
+skin01/damage
+  rotate: false
+  xy: 2, 66
+  size: 123, 144
+  orig: 123, 144
+  offset: 0, 0
+  index: -1
+skin01/effect_d03
+  rotate: false
+  xy: 358, 268
+  size: 122, 122
+  orig: 122, 122
+  offset: 0, 0
+  index: -1
+skin01/eye_05
+  rotate: false
+  xy: 482, 364
+  size: 28, 35
+  orig: 28, 35
+  offset: 0, 0
+  index: -1
+skin01/eye_i01
+  rotate: false
+  xy: 307, 127
+  size: 39, 23
+  orig: 39, 23
+  offset: 0, 0
+  index: -1
+skin01/eye_m01
+  rotate: true
+  xy: 482, 324
+  size: 38, 23
+  orig: 38, 23
+  offset: 0, 0
+  index: -1
+skin01/eye_s01
+  rotate: true
+  xy: 482, 286
+  size: 36, 21
+  orig: 36, 21
+  offset: 0, 0
+  index: -1
+skin01/haiir_b01
+  rotate: false
+  xy: 307, 152
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+skin01/hair01
+  rotate: true
+  xy: 89, 5
+  size: 59, 31
+  orig: 59, 31
+  offset: 0, 0
+  index: -1
+skin01/head01
+  rotate: false
+  xy: 442, 438
+  size: 64, 62
+  orig: 64, 62
+  offset: 0, 0
+  index: -1
+skin01/heal_effect04
+  rotate: false
+  xy: 2, 350
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+skin01/idle02-1
+  rotate: false
+  xy: 154, 366
+  size: 146, 134
+  orig: 146, 134
+  offset: 0, 0
+  index: -1
+skin01/idle02-2
+  rotate: false
+  xy: 150, 212
+  size: 101, 136
+  orig: 101, 136
+  offset: 0, 0
+  index: -1
+skin01/idle02-3
+  rotate: false
+  xy: 2, 212
+  size: 146, 136
+  orig: 146, 136
+  offset: 0, 0
+  index: -1
+skin01/idle02-4
+  rotate: false
+  xy: 253, 227
+  size: 103, 137
+  orig: 103, 137
+  offset: 0, 0
+  index: -1
+skin01/leg01
+  rotate: false
+  xy: 491, 401
+  size: 16, 35
+  orig: 16, 35
+  offset: 0, 0
+  index: -1
+skin01/mouth_04
+  rotate: false
+  xy: 290, 212
+  size: 11, 13
+  orig: 11, 13
+  offset: 0, 0
+  index: -1
+skin01/mouth_i01
+  rotate: false
+  xy: 154, 354
+  size: 12, 10
+  orig: 12, 10
+  offset: 0, 0
+  index: -1
+skin01/mouth_m01
+  rotate: true
+  xy: 276, 212
+  size: 13, 12
+  orig: 13, 12
+  offset: 0, 0
+  index: -1
+skin01/mouth_w01
+  rotate: true
+  xy: 253, 212
+  size: 13, 21
+  orig: 13, 21
+  offset: 0, 0
+  index: -1
+skin01/weapon01
+  rotate: true
+  xy: 223, 66
+  size: 37, 87
+  orig: 37, 87
+  offset: 0, 0
+  index: -1
+skin01/wing01
+  rotate: true
+  xy: 2, 2
+  size: 62, 85
+  orig: 62, 85
+  offset: 0, 0
+  index: -1
+skin01/wing_s01
+  rotate: true
+  xy: 358, 184
+  size: 82, 105
+  orig: 82, 105
+  offset: 0, 0
+  index: -1
+skin01/wing_s02
+  rotate: false
+  xy: 223, 105
+  size: 82, 105
+  orig: 82, 105
+  offset: 0, 0
+  index: -1
