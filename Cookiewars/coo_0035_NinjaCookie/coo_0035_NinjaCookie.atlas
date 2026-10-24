@@ -1,0 +1,265 @@
+
+coo_0035_NinjaCookie.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+skin01/acc_01
+  rotate: false
+  xy: 216, 286
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
+skin01/arm_01
+  rotate: false
+  xy: 149, 27
+  size: 58, 31
+  orig: 58, 31
+  offset: 0, 0
+  index: -1
+skin01/arm_01_1
+  rotate: true
+  xy: 196, 2
+  size: 23, 21
+  orig: 23, 21
+  offset: 0, 0
+  index: -1
+skin01/arm_02-1
+  rotate: false
+  xy: 149, 2
+  size: 45, 23
+  orig: 45, 23
+  offset: 0, 0
+  index: -1
+skin01/arm_02-2
+  rotate: true
+  xy: 484, 350
+  size: 35, 21
+  orig: 35, 21
+  offset: 0, 0
+  index: -1
+skin01/arm_03-1
+  rotate: true
+  xy: 477, 272
+  size: 37, 24
+  orig: 37, 24
+  offset: 0, 0
+  index: -1
+skin01/body_01
+  rotate: false
+  xy: 341, 374
+  size: 40, 48
+  orig: 40, 48
+  offset: 0, 0
+  index: -1
+skin01/body_02
+  rotate: true
+  xy: 149, 60
+  size: 72, 67
+  orig: 72, 67
+  offset: 0, 0
+  index: -1
+skin01/damage
+  rotate: false
+  xy: 2, 375
+  size: 130, 135
+  orig: 130, 135
+  offset: 0, 0
+  index: -1
+skin01/eff_07-1
+  rotate: false
+  xy: 2, 251
+  size: 127, 122
+  orig: 127, 122
+  offset: 0, 0
+  index: -1
+skin01/eff_07-2
+  rotate: false
+  xy: 134, 407
+  size: 131, 103
+  orig: 131, 103
+  offset: 0, 0
+  index: -1
+skin01/eye_01
+  rotate: false
+  xy: 434, 276
+  size: 41, 18
+  orig: 41, 18
+  offset: 0, 0
+  index: -1
+skin01/eye_02
+  rotate: false
+  xy: 434, 296
+  size: 41, 20
+  orig: 41, 20
+  offset: 0, 0
+  index: -1
+skin01/eye_03
+  rotate: false
+  xy: 341, 354
+  size: 38, 18
+  orig: 38, 18
+  offset: 0, 0
+  index: -1
+skin01/eye_04
+  rotate: false
+  xy: 383, 357
+  size: 51, 28
+  orig: 51, 28
+  offset: 0, 0
+  index: -1
+skin01/eye_05
+  rotate: true
+  xy: 431, 318
+  size: 29, 44
+  orig: 29, 44
+  offset: 0, 0
+  index: -1
+skin01/head_01
+  rotate: false
+  xy: 267, 353
+  size: 72, 69
+  orig: 72, 69
+  offset: 0, 0
+  index: -1
+skin01/head_02
+  rotate: false
+  xy: 436, 349
+  size: 46, 36
+  orig: 46, 36
+  offset: 0, 0
+  index: -1
+skin01/leaf1
+  rotate: true
+  xy: 2, 16
+  size: 115, 47
+  orig: 115, 47
+  offset: 0, 0
+  index: -1
+skin01/leaf2
+  rotate: true
+  xy: 91, 134
+  size: 115, 47
+  orig: 115, 47
+  offset: 0, 0
+  index: -1
+skin01/leaf3
+  rotate: true
+  xy: 51, 16
+  size: 115, 47
+  orig: 115, 47
+  offset: 0, 0
+  index: -1
+skin01/leaf4
+  rotate: true
+  xy: 100, 17
+  size: 115, 47
+  orig: 115, 47
+  offset: 0, 0
+  index: -1
+skin01/leaf5
+  rotate: false
+  xy: 134, 358
+  size: 115, 47
+  orig: 115, 47
+  offset: 0, 0
+  index: -1
+skin01/leaf6
+  rotate: false
+  xy: 131, 309
+  size: 115, 47
+  orig: 115, 47
+  offset: 0, 0
+  index: -1
+skin01/leg_01
+  rotate: true
+  xy: 390, 307
+  size: 48, 39
+  orig: 48, 39
+  offset: 0, 0
+  index: -1
+skin01/leg_02
+  rotate: false
+  xy: 477, 311
+  size: 33, 36
+  orig: 33, 36
+  offset: 0, 0
+  index: -1
+skin01/leg_03
+  rotate: false
+  xy: 390, 276
+  size: 42, 29
+  orig: 42, 29
+  offset: 0, 0
+  index: -1
+skin01/mask_01
+  rotate: false
+  xy: 248, 282
+  size: 72, 69
+  orig: 72, 69
+  offset: 0, 0
+  index: -1
+skin01/mask_02
+  rotate: false
+  xy: 322, 284
+  size: 66, 67
+  orig: 66, 67
+  offset: 0, 0
+  index: -1
+skin01/mask_03
+  rotate: true
+  xy: 140, 134
+  size: 70, 69
+  orig: 70, 69
+  offset: 0, 0
+  index: -1
+skin01/weapon_01
+  rotate: true
+  xy: 131, 281
+  size: 26, 83
+  orig: 26, 83
+  offset: 0, 0
+  index: -1
+skin01/weapon_02
+  rotate: true
+  xy: 2, 2
+  size: 12, 21
+  orig: 12, 21
+  offset: 0, 0
+  index: -1
+skin01/weapon_03
+  rotate: false
+  xy: 140, 206
+  size: 72, 73
+  orig: 72, 73
+  offset: 0, 0
+  index: -1
+skin01/win_01-1
+  rotate: false
+  xy: 2, 133
+  size: 87, 116
+  orig: 87, 116
+  offset: 0, 0
+  index: -1
+skin01/win_01-2
+  rotate: true
+  xy: 386, 387
+  size: 55, 124
+  orig: 55, 124
+  offset: 0, 0
+  index: -1
+skin01/win_01-3
+  rotate: true
+  xy: 267, 424
+  size: 86, 117
+  orig: 86, 117
+  offset: 0, 0
+  index: -1
+skin01/win_01-4
+  rotate: true
+  xy: 386, 444
+  size: 66, 124
+  orig: 66, 124
+  offset: 0, 0
+  index: -1
